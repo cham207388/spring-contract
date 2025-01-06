@@ -1,0 +1,131 @@
+# Ignore common system files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+**/logs/
+**/*.log
+**/log/
+
+# Ignore build directories
+**/build/
+**/out/
+
+# Ignore compiled files and classes
+**/*.class
+
+# Ignore temporary files
+**/*.swp
+**/*.swo
+**/*.tmp
+**/*.bak
+
+# Ignore IntelliJ IDEA project files
+**/.idea/
+**/*.iml
+
+# Ignore Eclipse project files
+**/.project
+**/.classpath
+**/.settings/
+
+# Ignore Maven/Gradle-related files
+**/.mvn/
+**/.gradle/
+**/target/
+**/dependency-reduced-pom.xml
+
+# Ignore Spring Boot-specific files
+**/hs_err_pid*.log
+**/.spring-boot-devtools.properties
+**/actuator/
+**/.restart/
+
+# Ignore environment files
+**/*.env
+**/.env
+
+# Ignore sensitive configuration files
+**/application.properties
+**/application.yml
+**/application-*.properties
+**/application-*.yml
+**/bootstrap.yml
+**/bootstrap-*.yml
+
+# Ignore IDE-specific files
+**/.vscode/
+**/*.run.xml
+
+# Ignore temporary files created by IDEs
+**/__pycache__/
+**/.pytest_cache/
+**/coverage/
+**/.lombok/
+
+# Ignore coverage reports
+**/*.lcov
+**/jacoco.exec
+**/jacoco-report/
+
+# Ignore user-specific files
+**/.env.local
+**/.env.test
+**/.env.production
+**/.cache
+**/.npm
+**/.yarn
+
+# Ignore package manager lock files
+**/package-lock.json
+**/yarn.lock
+
+# Ignore binary files
+**/*.war
+**/*.jar
+**/*.ear
+
+# Ignore generated files by annotation processors
+**/generated/
+
+# Ignore test results
+**/test-output/
+
+#HELP.md
+#.gradle
+#build/
+#!gradle/wrapper/gradle-wrapper.jar
+#!**/src/main/**/build/
+#!**/src/test/**/build/
+#
+#### STS ###
+#.apt_generated
+#.classpath
+#.factorypath
+#.project
+#.settings
+#.springBeans
+#.sts4-cache
+#bin/
+#!**/src/main/**/bin/
+#!**/src/test/**/bin/
+#
+#### IntelliJ IDEA ###
+#.idea
+#*.iws
+#*.iml
+#*.ipr
+#out/
+#!**/src/main/**/out/
+#!**/src/test/**/out/
+#
+#### NetBeans ###
+#/nbproject/private/
+#/nbbuild/
+#/dist/
+#/nbdist/
+#/.nb-gradle/
+#
+#### VS Code ###
+#.vscode/
+
