@@ -18,7 +18,7 @@ buildp:
 	./gradlew :producer:build
 
 publishp:
-	./gradlew :producerpublish
+	./gradlew :producer:publish
 
 testp:
 	./gradlew :producertest

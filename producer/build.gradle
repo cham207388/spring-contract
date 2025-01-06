@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.4.1'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.springframework.cloud.contract' version '4.2.0'
+    id 'maven-publish' // Add this plugin for publishing
 }
 
 group = 'com.abc.contracts'
@@ -11,6 +12,20 @@ version = '0.0.1-RELEASE'
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+publishing {
+    publications {
+        stubs(MavenPublication) {
+            artifactId = "${project.name}"
+            artifact ("${buildDir}/libs/${project.name}-${version}-stubs.jar"){
+                classifier = 'stubs'
+            }
+        }
+    }
+    repositories {
+        mavenLocal() // Publishes to the local Maven repository (~/.m2/repository)
     }
 }
 
