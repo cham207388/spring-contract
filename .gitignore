@@ -91,7 +91,7 @@ Thumbs.db
 # Ignore test results
 **/test-output/
 
-#HELP.md
+HELP.md
 #.gradle
 #build/
 #!gradle/wrapper/gradle-wrapper.jar
