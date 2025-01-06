@@ -12,6 +12,7 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+//    sourceCompatibility = '21'
 }
 
 configurations {
@@ -30,9 +31,9 @@ ext {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -45,6 +46,7 @@ dependencyManagement {
 }
 
 contracts {
+    baseClassForTests = 'com.abc.contracts.producer.BaseTestClass'
 }
 
 tasks.named('contractTest') {
@@ -53,4 +55,9 @@ tasks.named('contractTest') {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// Add this block to ensure compatibility with Java 21
+tasks.withType(JavaCompile) {
+    options.release = 21 // Ensures the compiler targets Java 21 APIs
 }
