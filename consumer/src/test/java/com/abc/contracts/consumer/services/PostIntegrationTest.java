@@ -25,7 +25,7 @@ class PostIntegrationTest {
     private PostsService postsService;
 
     @Test
-    void fetchRecommendations() {
+    void fetchPosts() {
         PostResponse recommendation = postsService.fetchPosts(Optional.empty());
 
         assertThat(recommendation).isNotNull();
@@ -33,7 +33,7 @@ class PostIntegrationTest {
     }
 
     @Test
-    void fetchRecommendationsWithExclusions() {
+    void fetchUserPosts() {
         PostResponse recommendation = postsService.fetchPosts(Optional.of(1));
         assertThat(recommendation).isNotNull();
         assertThat(recommendation.posts()).isNotNull().hasSize(1);

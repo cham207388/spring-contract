@@ -1,3 +1,4 @@
 rootProject.name = 'spring-contract'
 
-include 'consumer', 'producer'
+include 'consumer'
+include 'producer'

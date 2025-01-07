@@ -1,4 +1,4 @@
-.PHONY: help cleanp buildp publishp testp cbp
+.PHONY: help cleanp buildp publishp testp cbp cleanc buildc debugc testp
 
 help: ## Show this help message with aligned shortcuts, descriptions, and commands
 	@awk 'BEGIN {FS = ":"; printf "\033[1m%-20s %-40s %s\033[0m\n", "Target", "Description", "Command"} \
@@ -35,8 +35,8 @@ buildc:
 testc:
 	./gradlew :consumer:test
 
-tasksp:
-	./gradlew :consumer:tasks
+debugc:
+	./gradlew :consumer:test --debug-jvm
 
 cbp: cleanp buildp publishp
 	echo 'clean build and publish'

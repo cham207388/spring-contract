@@ -15,13 +15,13 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping("/posts")
-    public ResponseEntity<Post> post(@RequestBody Post post) {
-        return ResponseEntity.ok(postService.save(post));
-    }
-
     @GetMapping("/posts")
     public ResponseEntity<PostResponse> fetchPosts(@RequestParam(required = false) Optional<Integer> userId) {
         return ResponseEntity.ok(postService.fetchPost(userId));
+    }
+
+    @PostMapping("/posts")
+    public ResponseEntity<Post> post(@RequestBody Post post) {
+        return ResponseEntity.ok(postService.save(post));
     }
 }
