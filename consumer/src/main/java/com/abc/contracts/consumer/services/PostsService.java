@@ -19,14 +19,15 @@ public class PostsService {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host("localhost")
-                .port(14257)
+                .port(14255)
                 .path("/posts")
                 .queryParamIfPresent("userId", userId)
                 .toUriString();
-        return restClient.get()
+        RestClient.ResponseSpec retrieve = restClient.get()
                 .uri(URI.create(uri))
                 .accept(APPLICATION_JSON)
-                .retrieve()
+                .retrieve();
+        return retrieve
                 .body(PostResponse.class);
     }
 
@@ -35,7 +36,7 @@ public class PostsService {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host("localhost")
-                .port(14257)
+                .port(14255)
                 .path("/posts")
                 .toUriString();
         return restClient.post()

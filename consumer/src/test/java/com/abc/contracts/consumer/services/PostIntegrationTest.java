@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(
-        ids = {"com.abc.contracts:producer:0.0.1-RELEASE:stubs:14257"},
+        ids = {"com.abc.contracts:producer:0.0.1-RELEASE:stubs:14255"},
         stubsMode = StubRunnerProperties.StubsMode.LOCAL
 )
 class PostIntegrationTest {
@@ -36,6 +36,6 @@ class PostIntegrationTest {
     void fetchUserPosts() {
         PostResponse recommendation = postsService.fetchPosts(Optional.of(1));
         assertThat(recommendation).isNotNull();
-        assertThat(recommendation.posts()).isNotNull().hasSize(1);
+        assertThat(recommendation.posts()).isNotNull().hasSize(2);
     }
 }

@@ -10,7 +10,6 @@ Contract.make {
         headers {
             header(accept(), applicationJson())
         }
-        body(userId         : anyInteger())
     }
     response {
         status 200

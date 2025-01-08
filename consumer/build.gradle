@@ -35,7 +35,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-//    testImplementation "com.abc.contracts:producer:0.0.1-RELEASE:stubs"
 }
 
 dependencyManagement {
