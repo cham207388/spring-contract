@@ -23,11 +23,10 @@ public class PostsService {
                 .path("/posts")
                 .queryParamIfPresent("userId", userId)
                 .toUriString();
-        RestClient.ResponseSpec retrieve = restClient.get()
+        return restClient.get()
                 .uri(URI.create(uri))
                 .accept(APPLICATION_JSON)
-                .retrieve();
-        return retrieve
+                .retrieve()
                 .body(PostResponse.class);
     }
 
