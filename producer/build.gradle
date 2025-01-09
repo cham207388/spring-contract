@@ -3,11 +3,11 @@ plugins {
     id 'org.springframework.boot' version '3.4.1'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.springframework.cloud.contract' version '4.2.0'
-    id 'maven-publish' // Add this plugin for publishing
+    id 'maven-publish'
 }
 
 group = 'com.abc.contracts'
-version = '0.0.1-RELEASE'
+version = '0.0.1-SNAPSHOT' // Keep SNAPSHOT version for build/libs artifact
 
 java {
     toolchain {
@@ -15,24 +15,50 @@ java {
     }
 }
 
+// Dynamically get the Git commit hash for customizing the published artifact
+def gitCommitHash = 'git rev-parse --short HEAD'.execute().text.trim()
+
+// Task to rename the artifact
+task createRenamedArtifact {
+    inputs.file("${buildDir}/libs/${project.name}-${version}-stubs.jar") // Original artifact
+    outputs.file("${buildDir}/renamed-jar/${project.name}-0.0.1-${gitCommitHash}-stubs.jar") // Renamed artifact
+
+    doLast {
+        def sourceFile = file("${buildDir}/libs/${project.name}-${version}-stubs.jar")
+        def targetDir = file("${buildDir}/renamed-jar")
+        def targetFile = file("${targetDir}/${project.name}-0.0.1-${gitCommitHash}-stubs.jar")
+
+        if (!targetDir.exists()) {
+            targetDir.mkdirs()
+        }
+        sourceFile.renameTo(targetFile)
+
+        println "Renamed artifact created: ${targetFile}"
+    }
+}
+
 publishing {
     publications {
         stubs(MavenPublication) {
             artifactId = "${project.name}"
-            artifact ("${buildDir}/libs/${project.name}-${version}-stubs.jar"){
+
+            // Override version for publishing (remove SNAPSHOT)
+            version = "0.0.1-${gitCommitHash}"
+
+            // Use the renamed artifact for publishing
+            artifact("${buildDir}/renamed-jar/${project.name}-0.0.1-${gitCommitHash}-stubs.jar") {
                 classifier = 'stubs'
             }
         }
     }
     repositories {
-        mavenLocal() // Publishes to the local Maven repository (~/.m2/repository)
+        mavenLocal() // Publish to the local Maven repository (~/.m2/repository)
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+// Ensure renamed artifact is created before publishing
+tasks.named("publishStubsPublicationToMavenLocalRepository") {
+    dependsOn(createRenamedArtifact)
 }
 
 repositories {
