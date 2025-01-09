@@ -32,7 +32,7 @@ Contract.make {
                                 userId: 1
                         ],
                         [
-                                id: 2,
+                                id: 3,
                                 title: "Test",
                                 content: "Contract Testing",
                                 userId: 2

@@ -1,49 +1,31 @@
 package com.abc.contracts.consumer.services;
 
+import com.abc.contracts.consumer.client.RestfulClient;
 import com.abc.contracts.consumer.domains.Post;
 import com.abc.contracts.consumer.domains.PostResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.util.Optional;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
+@RequiredArgsConstructor
 public class PostsService {
 
-    public PostResponse fetchPosts(Optional<Integer> userId) {
-        RestClient restClient = RestClient.create();
-        String uri = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(14255)
-                .path("/posts")
-                .queryParamIfPresent("userId", userId)
-                .toUriString();
-        return restClient.get()
-                .uri(URI.create(uri))
-                .accept(APPLICATION_JSON)
-                .retrieve()
-                .body(PostResponse.class);
+    private final RestfulClient restfulClient;
+
+
+    public PostResponse getAllPosts() {
+        return restfulClient.getAllPosts();
+    }
+
+    public PostResponse getPostsByUserId(int userId) {
+        return restfulClient.getPostsByUserId(userId);
+    }
+
+    public Post getPostByUserIdAndPostId(int id, int userId) {
+        return restfulClient.getPostByUserIdAndPostId(id, userId);
     }
 
     public Post addPost(Post post) {
-        RestClient restClient = RestClient.create();
-        String uri = UriComponentsBuilder.newInstance()
-                .scheme("http")
-                .host("localhost")
-                .port(14255)
-                .path("/posts")
-                .toUriString();
-        return restClient.post()
-                .uri(URI.create(uri))
-                .accept(APPLICATION_JSON)
-                .contentType(APPLICATION_JSON)
-                .body(post)
-                .retrieve()
-                .body(Post.class);
+        return restfulClient.addPost(post);
     }
 }

@@ -70,8 +70,3 @@ tasks.named('contractTest') {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
-//// Add this block to ensure compatibility with Java 21
-//tasks.withType(JavaCompile) {
-//    options.release = 21 // Ensures the compiler targets Java 21 APIs
-//}

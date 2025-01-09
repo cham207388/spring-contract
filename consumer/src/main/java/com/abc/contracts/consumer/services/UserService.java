@@ -11,7 +11,11 @@ import java.util.Optional;
 public class UserService {
     private final PostsService postsService;
 
-    public PostResponse fetchUserPost(Optional<Integer> id) {
-        return postsService.fetchPosts(id);
+    public PostResponse getAllPost() {
+        return postsService.getAllPosts();
+    }
+
+    public PostResponse getUserPosts(Integer id) {
+        return postsService.getPostsByUserId(id);
     }
 }

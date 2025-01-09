@@ -11,3 +11,4 @@ public class Post {
     private String content;
     private Integer userId;
 }
+

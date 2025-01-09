@@ -16,8 +16,18 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/posts")
-    public ResponseEntity<PostResponse> fetchPosts(@RequestParam(required = false) Optional<Integer> userId) {
-        return ResponseEntity.ok(postService.fetchPost(userId));
+    public ResponseEntity<PostResponse> getAllPosts() {
+        return ResponseEntity.ok(postService.getAllPosts());
+    }
+
+    @GetMapping("/posts/users")
+    public ResponseEntity<PostResponse> getPostsByUserId(@RequestParam Integer userId) {
+        return ResponseEntity.ok(postService.getPostsByUserid(userId));
+    }
+
+    @GetMapping("/posts/{id}/users/{userId}")
+    public ResponseEntity<Post> getPostByUserIdAndPostId(@PathVariable Integer id, @PathVariable Integer userId) {
+        return ResponseEntity.ok(postService.getPostByUserIdAndPostId(id, userId));
     }
 
     @PostMapping("/posts")

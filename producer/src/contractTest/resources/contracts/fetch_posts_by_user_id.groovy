@@ -5,7 +5,8 @@ import org.springframework.cloud.contract.spec.internal.HttpMethods
 
 Contract.make {
     request {
-        urlPath( '/posts') {
+        description "Should return all posts by user with id = 1"
+        urlPath( '/posts/users') {
             queryParameters {
                 parameter('userId', equalTo(1))
             }
