@@ -17,17 +17,17 @@ java {
 
 // Dynamically get the Git commit hash for customizing the published artifact
 // def gitCommitHash = 'git rev-parse --short HEAD'.execute().text.trim()
-def gitCommitHash = '0.0.1-RELEASE'
+def stubVersion = '0.0.1-RELEASE'
 
 // Task to rename the artifact
 task createRenamedArtifact {
     inputs.file("${buildDir}/libs/${project.name}-${version}-stubs.jar") // Original artifact
-    outputs.file("${buildDir}/renamed-jar/${project.name}-${gitCommitHash}-stubs.jar") // Renamed artifact
+    outputs.file("${buildDir}/renamed-jar/${project.name}-${stubVersion}-stubs.jar") // Renamed artifact
 
     doLast {
         def sourceFile = file("${buildDir}/libs/${project.name}-${version}-stubs.jar")
         def targetDir = file("${buildDir}/renamed-jar")
-        def targetFile = file("${targetDir}/${project.name}-${gitCommitHash}-stubs.jar")
+        def targetFile = file("${targetDir}/${project.name}-${stubVersion}-stubs.jar")
 
         if (!targetDir.exists()) {
             targetDir.mkdirs()
@@ -44,10 +44,10 @@ publishing {
             artifactId = "${project.name}"
 
             // Override version for publishing (remove SNAPSHOT)
-            version = "${gitCommitHash}"
+            version = "${stubVersion}"
 
             // Use the renamed artifact for publishing
-            artifact("${buildDir}/renamed-jar/${project.name}-${gitCommitHash}-stubs.jar") {
+            artifact("${buildDir}/renamed-jar/${project.name}-${stubVersion}-stubs.jar") {
                 classifier = 'stubs'
             }
         }
