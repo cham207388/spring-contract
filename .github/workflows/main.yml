@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-    - '1-snapshot'
+      - '1-snapshot'
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   build:
@@ -23,14 +23,11 @@ jobs:
         java-version: '21'
 
     - name: Set up Maven
-      uses: actions/setup-maven@v4
-      with:
-        maven-version: '3.9.1'
+      run: |
+        mvn --version
 
     - name: Setup Gradle
-      uses: actions/setup-gradle@v4
-      with:
-        gradle-version: '8.1.1'
+      uses: gradle/actions/setup-gradle@v4
 
     - name: Build with Gradle
       run: |
