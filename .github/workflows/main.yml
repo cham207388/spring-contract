@@ -45,9 +45,9 @@ jobs:
     - name: Publish to Maven Central
       run: |
         cd producer
-        ./gradlew publish
+        ./gradlew :producer:publish
 
     - name: Consumer test
       run: |
         cd consumer
-        ./gradlew clean build
+        ./gradlew :consumer:clean :consumer:build
