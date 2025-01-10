@@ -23,11 +23,12 @@ public class RestfulClient {
     @Value("${producer.port}")
     private int port;
 
+    private static final String HOST = "localhost";
 
     public PostResponse getAllPosts() {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host("localhost")
+                .host(HOST)
                 .port(port)
                 .path("/posts")
                 .toUriString();
@@ -41,7 +42,7 @@ public class RestfulClient {
     public PostResponse getPostsByUserId(int userId) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host("localhost")
+                .host(HOST)
                 .port(port)
                 .path("/posts/users")
                 .queryParam("userId", userId)
@@ -64,7 +65,7 @@ public class RestfulClient {
     public Post addPost(Post post) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host("localhost")
+                .host(HOST)
                 .port(port)
                 .path("/posts")
                 .toUriString();
