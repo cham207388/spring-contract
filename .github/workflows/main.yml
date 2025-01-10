@@ -40,8 +40,7 @@ jobs:
 
     - name: Build with Gradle
       run: |
-        cd producer
-        ./gradlew clean build --stacktrace
+        ./gradlew :producer:clean :producer:build --stacktrace
 
     - name: Publish to Maven Central
       run: |
