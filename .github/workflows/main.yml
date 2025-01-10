@@ -32,6 +32,9 @@ jobs:
     - name: Ensure Gradle Wrapper is Executable
       run: chmod +x gradlew
 
+    - name: Verify Gradle Wrapper Files
+      run: ls -l gradle/wrapper
+
     - name: Build with Gradle
       run: |
         cd producer
