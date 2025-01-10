@@ -6,7 +6,7 @@ import com.abc.contracts.producer.services.PostService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 
-public class BaseTestClass {
+public class BaseContractTest {
     @BeforeEach
     void setUp() {
         RestAssuredMockMvc.standaloneSetup(new PostController(new PostService()));

@@ -3,11 +3,11 @@ plugins {
     id 'org.springframework.boot' version '3.4.1'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.springframework.cloud.contract' version '4.2.0'
-    id 'maven-publish' // Add this plugin for publishing
+    id 'maven-publish'
 }
 
 group = 'com.abc.contracts'
-version = '0.0.1-RELEASE'
+version = '0.0.1-SNAPSHOT' // Keep SNAPSHOT version for build/libs artifact
 
 java {
     toolchain {
@@ -15,23 +15,25 @@ java {
     }
 }
 
+// def gitCommitHash = 'git rev-parse --short HEAD'.execute().text.trim()
+def stubVersion = '0.0.1-RELEASE'
+
 publishing {
     publications {
         stubs(MavenPublication) {
             artifactId = "${project.name}"
-            artifact ("${buildDir}/libs/${project.name}-${version}-stubs.jar"){
+
+            // Override version for publishing (remove SNAPSHOT)
+            version = "${stubVersion}"
+
+            // Use the renamed artifact for publishing
+            artifact("${buildDir}/libs/${project.name}-${stubVersion}-stubs.jar") {
                 classifier = 'stubs'
             }
         }
     }
     repositories {
-        mavenLocal() // Publishes to the local Maven repository (~/.m2/repository)
-    }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+        mavenLocal() // Publish to the local Maven repository (~/.m2/repository)
     }
 }
 
@@ -60,7 +62,7 @@ dependencyManagement {
 }
 
 contracts {
-    baseClassForTests = 'com.abc.contracts.producer.BaseTestClass'
+    baseClassForTests = 'com.abc.contracts.producer.BaseContractTest'
 }
 
 tasks.named('contractTest') {
@@ -70,3 +72,25 @@ tasks.named('contractTest') {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// Task to rename the artifact
+task renameStubArtifact {
+    inputs.file("${buildDir}/libs/${project.name}-${version}-stubs.jar") // Original artifact
+    outputs.file("${buildDir}/libs/${project.name}-${stubVersion}-stubs.jar") // Renamed artifact
+
+    doLast {
+        def sourceFile = file("${buildDir}/libs/${project.name}-${version}-stubs.jar")
+        def targetDir = file("${buildDir}/libs")
+        def targetFile = file("${targetDir}/${project.name}-${stubVersion}-stubs.jar")
+
+        if (!targetDir.exists()) {
+            targetDir.mkdirs()
+        }
+        sourceFile.renameTo(targetFile)
+
+        println "Renamed artifact created: ${targetFile}"
+    }
+}
+
+// publish task depends on rename task
+publishStubsPublicationToMavenLocalRepository.dependsOn renameStubArtifact
