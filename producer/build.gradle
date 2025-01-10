@@ -74,7 +74,7 @@ tasks.named('test') {
 }
 
 // Task to rename the artifact
-task createRenamedArtifact {
+task renameStubArtifact {
     inputs.file("${buildDir}/libs/${project.name}-${version}-stubs.jar") // Original artifact
     outputs.file("${buildDir}/libs/${project.name}-${stubVersion}-stubs.jar") // Renamed artifact
 
@@ -93,4 +93,4 @@ task createRenamedArtifact {
 }
 
 // publish task depends on rename task
-publishStubsPublicationToMavenLocalRepository.dependsOn createRenamedArtifact
+publishStubsPublicationToMavenLocalRepository.dependsOn renameStubArtifact
