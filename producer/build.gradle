@@ -15,7 +15,6 @@ java {
     }
 }
 
-// Dynamically get the Git commit hash for customizing the published artifact
 // def gitCommitHash = 'git rev-parse --short HEAD'.execute().text.trim()
 def stubVersion = '0.0.1-RELEASE'
 
