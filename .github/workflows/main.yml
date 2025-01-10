@@ -35,10 +35,13 @@ jobs:
     - name: Verify Gradle Wrapper Files
       run: ls -l gradle/wrapper
 
+    - name: Verify Gradle Version
+      run: ./gradlew --version
+
     - name: Build with Gradle
       run: |
         cd producer
-        ./gradlew clean build
+        ./gradlew clean build --stacktrace
 
     - name: Publish to Maven Central
       run: |
