@@ -2,16 +2,12 @@ package com.abc.contracts.producer;
 
 import com.abc.contracts.producer.config.TestConfig;
 import com.abc.contracts.producer.controllers.PostController;
-import com.abc.contracts.producer.domains.Post;
-import com.abc.contracts.producer.domains.PostResponse;
 import com.abc.contracts.producer.services.PostService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import lombok.RequiredArgsConstructor;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
