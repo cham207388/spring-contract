@@ -28,17 +28,14 @@ jobs:
     - name: Ensure Gradle Wrapper is Executable
       run: chmod +x gradlew
 
-    - name: Verify Gradle Wrapper Files
-      run: ls -l gradle/wrapper
-
     - name: Verify Gradle Version
       run: ./gradlew --version
 
-    - name: Build with Gradle
+    - name: Build project
       run: |
         ./gradlew :producer:clean :producer:build --stacktrace
 
-    - name: Publish to Maven Central
+    - name: Publish to stub jar Maven Central
       run: |
         ./gradlew :producer:publish
 

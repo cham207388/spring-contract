@@ -1,5 +1,3 @@
-import com.abc.plugin.RenameStubArtifactPlugin
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.1'
@@ -75,4 +73,24 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-apply plugin: com.abc.plugin.RenameStubArtifactPlugin
+// Task to rename the artifact
+task renameStubArtifact {
+    inputs.file("${buildDir}/libs/${project.name}-${version}-stubs.jar") // Original artifact
+    outputs.file("${buildDir}/libs/${project.name}-${stubVersion}-stubs.jar") // Renamed artifact
+
+    doLast {
+        def sourceFile = file("${buildDir}/libs/${project.name}-${version}-stubs.jar")
+        def targetDir = file("${buildDir}/libs")
+        def targetFile = file("${targetDir}/${project.name}-${stubVersion}-stubs.jar")
+
+        if (!targetDir.exists()) {
+            targetDir.mkdirs()
+        }
+        sourceFile.renameTo(targetFile)
+
+        println "Renamed artifact created: ${targetFile}"
+    }
+}
+
+// publish task depends on rename task
+publishStubsPublicationToMavenLocalRepository.dependsOn renameStubArtifact
