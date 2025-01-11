@@ -14,17 +14,23 @@ class RenameStubArtifactPlugin implements Plugin<Project> {
         Task renameStubArtifactTask = project.tasks.register('renameStubArtifact') {
             inputs.file("${project.buildDir}/libs/${project.name}-${project.version}-stubs.jar") // Original artifact
             outputs.file("${project.buildDir}/libs/${project.name}-${stubVersion}-stubs.jar") // Renamed artifact
-
+            
+            doFirst {
+                println "Renaming artifact from ${project.name}-${project.version}-stubs.jar to ${project.name}-${stubVersion}-stubs.jar"
+            }
+            
             doLast {
                 def sourceFile = project.file("${project.buildDir}/libs/${project.name}-${project.version}-stubs.jar")
-                def targetFile = project.file("${project.buildDir}/libs/${project.name}-${stubVersion}-stubs.jar")
+                def targetDir = project.file("${project.buildDir}/libs")
+                
+                def targetFile = project.file("${targetDir}/${project.name}-${stubVersion}-stubs.jar")
 
                 if (!targetDir.exists()) {
                     targetDir.mkdirs()
                 }
                 sourceFile.renameTo(targetFile)
 
-                println "Renamed artifact created: ${targetFile}"
+                println "Renaming stub artifact completed!"
             }
         }.get()
 
