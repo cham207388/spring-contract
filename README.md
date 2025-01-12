@@ -92,3 +92,7 @@ This is the service that is calling the producer. It's also called the client.
   - It's a way to make sure that test data are injected accordingly
   - similar endpoints can easily be overridden or not registered
     - /user/post vs /user/post/123
+
+## Produce stubs to github
+
+- create a token from [access token](https://github.com/settings/tokens/new)

@@ -33,7 +33,15 @@ publishing {
         }
     }
     repositories {
-        mavenLocal() // Publish to the local Maven repository (~/.m2/repository)
+        // add gpr.token and gpr.user to ~/.gradle/gradle.properties
+        // or set them as environment variables
+        maven {
+            url = uri("https://maven.pkg.github.com/cham207388/spring-contract")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
 
