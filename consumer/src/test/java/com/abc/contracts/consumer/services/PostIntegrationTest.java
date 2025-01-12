@@ -3,9 +3,7 @@ package com.abc.contracts.consumer.services;
 import com.abc.contracts.consumer.client.RestfulClient;
 import com.abc.contracts.consumer.domains.Post;
 import com.abc.contracts.consumer.domains.PostResponse;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
 import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
@@ -21,11 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
         stubsMode = StubRunnerProperties.StubsMode.LOCAL
 )
 @ActiveProfiles("test")
-@RequiredArgsConstructor
 class PostIntegrationTest {
 
-    @Autowired
-    private RestfulClient restfulClient;
+    private final RestfulClient restfulClient;
+    
+    public PostIntegrationTest(RestfulClient restfulClient) {
+        this.restfulClient = restfulClient;
+    }
 
     @Test
     void getAllPosts() {
