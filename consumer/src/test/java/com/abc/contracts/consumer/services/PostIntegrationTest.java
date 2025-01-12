@@ -3,7 +3,6 @@ package com.abc.contracts.consumer.services;
 import com.abc.contracts.consumer.client.RestfulClient;
 import com.abc.contracts.consumer.domains.Post;
 import com.abc.contracts.consumer.domains.PostResponse;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,14 +17,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(
         ids = {"com.abc.contracts:producer:0.0.1-RELEASE:stubs:14255"},
-        stubsMode = StubRunnerProperties.StubsMode.LOCAL
+        stubsMode = StubRunnerProperties.StubsMode.REMOTE, 
+        repositoryRoot = "https://maven.pkg.github.com/cham207388/spring-contract"
 )
 @ActiveProfiles("test")
-@RequiredArgsConstructor
 class PostIntegrationTest {
 
-    @Autowired
-    private RestfulClient restfulClient;
+    private final RestfulClient restfulClient;
+    
+    public PostIntegrationTest(RestfulClient restfulClient) {
+        this.restfulClient = restfulClient;
+    }
 
     @Test
     void getAllPosts() {
