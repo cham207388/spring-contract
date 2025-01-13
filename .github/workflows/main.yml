@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - 5-upload-download-artifact
   pull_request:
     branches:
       - main
@@ -34,10 +34,22 @@ jobs:
     - name: Build project
       run: |
         ./gradlew :producer:clean :producer:build --stacktrace
+        
+    - name: Upload stub artifact to GitHub Packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: producer-stubs-0.0.1-SNAPSHOT-stubs.jar
+        path: producer/build/libs/producer-stubs-0.0.1-SNAPSHOT-stubs.jar
 
-    - name: Publish to stub jar Maven Central
-      run: |
-        ./gradlew :producer:publish
+    # - name: Publish to stub jar Maven Central
+    #   run: |
+    #     ./gradlew :producer:publish
+
+    - name: Download stub artifact from GitHub Packages
+      uses: actions/download-artifact@v4
+      with:
+        name: producer-stubs-0.0.1-SNAPSHOT-stubs.jar
+        path: ~/.m2/repository/com/abc/contracts/producer/0.0.1-SNAPSHOT/
 
     - name: Consumer test
       run: |

@@ -15,7 +15,7 @@ import com.abc.contracts.consumer.domains.PostResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(
-        ids = {"com.abc.contracts:producer:0.0.1-RELEASE:stubs:14255"},
+        ids = {"com.abc.contracts:producer:0.0.1-SNAPSHOT:stubs:14255"},
         stubsMode = StubRunnerProperties.StubsMode.LOCAL
 )
 @ActiveProfiles("test")
