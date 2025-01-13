@@ -1,8 +1,6 @@
 package com.abc.contracts.consumer.services;
 
-import com.abc.contracts.consumer.client.RestfulClient;
-import com.abc.contracts.consumer.domains.Post;
-import com.abc.contracts.consumer.domains.PostResponse;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,8 +8,9 @@ import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRun
 import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
 import org.springframework.test.context.ActiveProfiles;
 
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.abc.contracts.consumer.client.RestfulClient;
+import com.abc.contracts.consumer.domains.Post;
+import com.abc.contracts.consumer.domains.PostResponse;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -25,6 +24,7 @@ class PostIntegrationTest {
 
     private final RestfulClient restfulClient;
     
+    @Autowired
     public PostIntegrationTest(RestfulClient restfulClient) {
         this.restfulClient = restfulClient;
     }
