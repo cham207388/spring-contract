@@ -38,8 +38,8 @@ jobs:
     - name: Upload stub artifact to GitHub Packages
       uses: actions/upload-artifact@v4
       with:
-        name: producer-stubs-0.0.1-SNAPSHOT-stubs.jar
-        path: producer/build/libs/producer-stubs-0.0.1-SNAPSHOT-stubs.jar
+        name: producer-0.0.1-SNAPSHOT-stubs.jar
+        path: producer/build/libs/producer-0.0.1-SNAPSHOT-stubs.jar
 
     # - name: Publish to stub jar Maven Central
     #   run: |
@@ -48,7 +48,7 @@ jobs:
     - name: Download stub artifact from GitHub Packages
       uses: actions/download-artifact@v4
       with:
-        name: producer-stubs-0.0.1-SNAPSHOT-stubs.jar
+        name: producer-0.0.1-SNAPSHOT-stubs.jar
         path: ~/.m2/repository/com/abc/contracts/producer/0.0.1-SNAPSHOT/
 
     - name: Consumer test
