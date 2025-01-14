@@ -41,7 +41,7 @@ jobs:
         name: producer-0.0.1-SNAPSHOT-stubs.jar
         path: producer/build/libs/producer-0.0.1-SNAPSHOT-stubs.jar
 
-    # - name: Publish to stub jar Maven Central
+    # - name: Publish to stub jar Maven Central 
     #   run: |
     #     ./gradlew :producer:publish
 
