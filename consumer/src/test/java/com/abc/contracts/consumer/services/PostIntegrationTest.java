@@ -47,6 +47,7 @@ class PostIntegrationTest {
         Exception exception = assertThrows(Exception.class, ()-> {
             restfulClient.getPostsByUserId(100);
         });
+        System.err.println(exception.getMessage());
     }
 
     @Test
