@@ -9,6 +9,7 @@ Thumbs.db
 
 # Ignore build directories
 **/build/
+**/bin/
 **/out/
 
 # Ignore compiled files and classes
