@@ -34,7 +34,7 @@ public class PostController {
     }
     
     @PostMapping("/posts/all")
-    public ResponseEntity<List<Post>> post(@RequestBody List<Post> posts) {
+    public ResponseEntity<List<Post>> posts(@RequestBody List<Post> posts) {
         return ResponseEntity.ok(postService.savePosts(posts));
     }
 }

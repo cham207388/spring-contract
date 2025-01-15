@@ -5,8 +5,8 @@ import org.springframework.cloud.contract.spec.internal.HttpMethods
 
 Contract.make {
     request {
-        description "Should return all posts by user with id = 1"
-        urlPath( '/posts/users') {
+        description 'Should return all posts by user with id = 1'
+        urlPath('/posts/users') {
             queryParameters {
                 parameter('userId', regex('[1-9][0-9]?'))
             }
@@ -26,18 +26,18 @@ Contract.make {
                 posts: [
                         [
                                 id: 1, // List elements must be maps with proper syntax
-                                title: "Tool",
-                                content: "Gradle",
+                                title: 'Tool',
+                                content: 'Gradle',
                                 userId: 1
                         ],
                         [
                                 id: 2,
-                                title: "Test",
-                                content: "Spring Cloud Contract",
+                                title: 'Test',
+                                content: 'Spring Cloud Contract',
                                 userId: 1
                         ]
                 ]
         ])
     }
-    priority(1) // the first contract to be added has the least priority (higher number)
+    priority(1) // the first contract to be added has the least priority: higher number
 }
