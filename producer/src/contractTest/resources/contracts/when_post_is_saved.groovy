@@ -4,7 +4,6 @@ import org.springframework.cloud.contract.spec.Contract
 import org.springframework.cloud.contract.spec.internal.HttpMethods
 
 Contract.make {
-    Pattern textPattern = regex('[a-zA-Z]+') // Define pattern once
 
     request {
         urlPath '/posts/'
@@ -13,8 +12,8 @@ Contract.make {
             header(accept(), applicationJson())
         }
         body(
-          title: $(consumer(textPattern)),
-          content: $(consumer(textPattern)),
+          title: $(consumer(regex('[a-zA-Z]+'))),
+          content: $(consumer(regex('[a-zA-Z]+'))),
           userId: anyInteger()
         )
     }
