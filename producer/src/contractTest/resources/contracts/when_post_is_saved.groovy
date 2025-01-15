@@ -6,15 +6,15 @@ import org.springframework.cloud.contract.spec.internal.HttpMethods
 Contract.make {
 
     request {
-        urlPath '/posts/'
+        urlPath '/posts'
         method HttpMethods.POST
         headers {
             header(accept(), applicationJson())
         }
         body(
-          title: $(consumer(regex('[a-zA-Z]+'))),
-          content: $(consumer(regex('[a-zA-Z]+'))),
-          userId: anyInteger()
+                title: $(consumer(regex('[a-zA-Z]+'))),
+                content: $(consumer(regex('[a-zA-Z]+'))),
+                userId: anyInteger()
         )
     }
     response {
@@ -23,10 +23,10 @@ Contract.make {
             header(contentType(), applicationJson())
         }
         body([
-                id: 1,
-                title: 'Tool',
+                id     : 1,
+                title  : 'Tool',
                 content: 'Gradle',
-                userId: 1
+                userId : 1
         ])
     }
     priority(2) // the first contract to be added has the least priority: higher number

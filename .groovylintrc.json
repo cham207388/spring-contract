@@ -3,6 +3,9 @@
     "rules": {
         "CompileStatic": {
             "enabled": false
+        },
+        "DuplicateStringLiteral": {
+            "enabled": false
         }
     }
 }
