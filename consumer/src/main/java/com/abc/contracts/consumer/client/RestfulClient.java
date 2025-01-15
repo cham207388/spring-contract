@@ -1,9 +1,12 @@
 package com.abc.contracts.consumer.client;
 
 import com.abc.contracts.consumer.domains.Post;
-import com.abc.contracts.consumer.domains.PostResponse;
+
+import java.util.List;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -11,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+import org.springframework.core.ParameterizedTypeReference;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
@@ -25,7 +29,7 @@ public class RestfulClient {
 
     private static final String HOST = "localhost";
 
-    public PostResponse getAllPosts() {
+        public List<Post> getAllPosts() {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host(HOST)
@@ -36,10 +40,11 @@ public class RestfulClient {
                 .uri(URI.create(uri))
                 .accept(APPLICATION_JSON)
                 .retrieve()
-                .body(PostResponse.class);
+                .body(new ParameterizedTypeReference<List<Post>>() {
+                });
     }
 
-    public PostResponse getPostsByUserId(int userId) {
+    public List<Post> getPostsByUserId(int userId) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host(HOST)
@@ -51,7 +56,8 @@ public class RestfulClient {
                 .uri(URI.create(uri))
                 .accept(APPLICATION_JSON)
                 .retrieve()
-                .body(PostResponse.class);
+                .body(new ParameterizedTypeReference<List<Post>>() {
+                });
     }
 
     public Post getPostByUserIdAndPostId(int id, int userId) {
@@ -62,7 +68,7 @@ public class RestfulClient {
                 .body(Post.class);
     }
 
-    public Post addPost(Post post) {
+    public Post savePost(Post post) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host(HOST)
@@ -76,5 +82,22 @@ public class RestfulClient {
                 .body(post)
                 .retrieve()
                 .body(Post.class);
+    }
+
+    public List<Post> saveAllPost(List<Post> post) {
+        String uri = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host(HOST)
+                .port(port)
+                .path("/posts/all")
+                .toUriString();
+        return restClient.post()
+                .uri(URI.create(uri))
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
+                .body(post)
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<Post>>() {
+                });
     }
 }

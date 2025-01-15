@@ -2,6 +2,9 @@ package com.abc.contracts.consumer.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +14,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.abc.contracts.consumer.client.RestfulClient;
 import com.abc.contracts.consumer.domains.Post;
-import com.abc.contracts.consumer.domains.PostResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(
@@ -30,16 +32,16 @@ class PostIntegrationTest {
 
     @Test
     void getAllPosts() {
-        PostResponse posts = restfulClient.getAllPosts();
+        List<Post> posts = restfulClient.getAllPosts();
         assertThat(posts).isNotNull();
-        assertThat(posts.getPosts()).isNotNull().hasSize(3);
+        assertThat(posts).isNotNull().hasSize(3);
     }
 
     @Test
     void getPostsByUserId() {
-        PostResponse userPosts = restfulClient.getPostsByUserId(19);
+        List<Post> userPosts = restfulClient.getPostsByUserId(19);
         assertThat(userPosts).isNotNull();
-        assertThat(userPosts.getPosts()).isNotNull().hasSize(2);
+        assertThat(userPosts).isNotNull().hasSize(2);
     }
 
     @Test

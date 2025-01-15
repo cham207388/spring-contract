@@ -1,10 +1,13 @@
 package com.abc.contracts.consumer.services;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.abc.contracts.consumer.client.RestfulClient;
 import com.abc.contracts.consumer.domains.Post;
-import com.abc.contracts.consumer.domains.PostResponse;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -12,12 +15,11 @@ public class PostsService {
 
     private final RestfulClient restfulClient;
 
-
-    public PostResponse getAllPosts() {
+    public List<Post> getAllPosts() {
         return restfulClient.getAllPosts();
     }
 
-    public PostResponse getPostsByUserId(int userId) {
+    public List<Post> getPostsByUserId(int userId) {
         return restfulClient.getPostsByUserId(userId);
     }
 
@@ -25,7 +27,11 @@ public class PostsService {
         return restfulClient.getPostByUserIdAndPostId(id, userId);
     }
 
-    public Post addPost(Post post) {
-        return restfulClient.addPost(post);
+    public Post savePost(Post post) {
+        return restfulClient.savePost(post);
+    }
+    
+    public List<Post> saveAllPost(List<Post> posts) {
+        return restfulClient.saveAllPost(posts);
     }
 }

@@ -1,21 +1,53 @@
 package com.abc.contracts.consumer.services;
 
-import com.abc.contracts.consumer.domains.PostResponse;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import com.abc.contracts.consumer.domains.Post;
+import com.abc.contracts.consumer.domains.UserInfo;
+import com.abc.contracts.consumer.dto.UserRequest;
+import com.abc.contracts.consumer.dto.UserResponse;
+import com.abc.contracts.consumer.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final PostsService postsService;
 
-    public PostResponse getAllPost() {
+    private final PostsService postsService;
+    private final UserRepository userRepository;
+
+    public List<Post> getAllPost() {
         return postsService.getAllPosts();
     }
 
-    public PostResponse getUserPosts(Integer id) {
-        return postsService.getPostsByUserId(id);
+    public UserResponse getUser(Integer id) {
+        UserInfo userInfo = userRepository.findById(id).orElse(null);
+        if (userInfo == null) {
+            throw new RuntimeException("User not found");
+        }
+        UserResponse response = new UserResponse();
+        response.setId(userInfo.getId());
+        response.setFullName(userInfo.getFullName());
+        response.setEmail(userInfo.getEmail());
+        response.setPosts(postsService.getPostsByUserId(id));
+        return response;
+    }
+
+    @Transactional
+    public int saveUser(UserRequest request) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(request.getId());
+        userInfo.setFullName(request.getFullName());
+        userInfo.setEmail(request.getEmail());
+        userRepository.save(userInfo);
+        List<Post> posts = request.getPosts();
+        posts.forEach(post -> post.setUserId(userInfo.getId()));
+        postsService.saveAllPost(posts);
+        return request.getId();
     }
 }
