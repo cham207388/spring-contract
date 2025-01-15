@@ -56,6 +56,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2' // Replace version with the one you need
+    implementation 'org.springframework.boot:spring-boot-starter-json'
 }
 
 dependencyManagement {

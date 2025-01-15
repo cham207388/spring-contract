@@ -1,9 +1,12 @@
 package com.abc.contracts.producer.controllers;
 
 import java.util.List;
+
 import com.abc.contracts.producer.domains.Post;
 import com.abc.contracts.producer.services.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +31,18 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostByUserIdAndPostId(id, userId));
     }
 
-    @PostMapping("/posts")
+    @PostMapping(value = "/posts", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Post> post(@RequestBody Post post) {
-        return ResponseEntity.ok(postService.save(post));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(postService.save(post));
     }
-    
+
     @PostMapping("/posts/all")
     public ResponseEntity<List<Post>> posts(@RequestBody List<Post> posts) {
-        return ResponseEntity.ok(postService.savePosts(posts));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(postService.savePosts(posts));
     }
 }

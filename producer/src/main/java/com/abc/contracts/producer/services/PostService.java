@@ -29,7 +29,7 @@ public class PostService {
     public Post save(Post post) {
         Post response = postRepository.save(post);
         log.info("post response id: {}", response.getId());
-        return post;
+        return response;
     }
     
     public List<Post> savePosts(List<Post> posts) {

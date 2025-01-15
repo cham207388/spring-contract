@@ -6,12 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-@Getter
-@Setter
-@Entity
-@Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Post {
 
     @Id

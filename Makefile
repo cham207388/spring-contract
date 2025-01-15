@@ -45,6 +45,6 @@ cbc: cleanp buildp
 	echo 'cleaned and built the consumer!'
 	
 database: # 2. start postgres container
-	docker container run --rm --name contract -e POSTGRES_DB=contract -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5433:5432 -d postgres
+	docker container run --rm --name contract -e POSTGRES_DB=contract -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
 
 	
