@@ -2,6 +2,7 @@ package com.abc.contracts.producer;
 
 import com.abc.contracts.producer.config.TestConfig;
 import com.abc.contracts.producer.controllers.PostController;
+import com.abc.contracts.producer.domains.Post;
 import com.abc.contracts.producer.services.PostService;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import static com.abc.contracts.producer.utils.TestUtils.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -38,5 +40,6 @@ public abstract class BaseContractTest {
         when(postService.getAllPosts()).thenReturn(getAllPostsResponse());
         when(postService.getPostsByUserid(anyInt())).thenReturn(getPostsByUseridResponse());
         when(postService.getPostByUserIdAndPostId(anyInt(), anyInt())).thenReturn(getPostByUserIdAndPostIdResponse());
+        when(postService.save(any(Post.class))).thenAnswer(i -> i.getArguments()[0]);
     }
 }

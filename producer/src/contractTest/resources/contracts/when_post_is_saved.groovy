@@ -13,12 +13,12 @@ Contract.make {
             header(accept(), applicationJson())
             header(contentType(), applicationJson())
         }
-        body(
-                id: null,
-                title: $(consumer(regex('[a-zA-Z]+')), producer('Tool')),
-                content: $(consumer(regex('[a-zA-Z]+')), producer('Gradle')),
-                userId: $(consumer(anyNumber()), producer(1))
-        )
+        body([
+                id     : $(consumer(null), producer(1)), // Allow null for id during creation
+                title  : $(consumer(anyNonEmptyString()), producer('Tool')), // Title string
+                content: $(consumer(anyNonEmptyString()), producer('Gradle')), // Content string
+                userId   : $(consumer(anyInteger()), producer(1)) // ISO LocalDateTime format
+        ])
     }
 
     response {
