@@ -27,7 +27,7 @@ publishing {
             version = "${stubVersion}"
 
             // Use the renamed artifact for publishing
-            artifact("${buildDir}/libs/${project.name}-${stubVersion}-stubs.jar") {
+            artifact(layout.buildDirectory.file("libs/${project.name}-${stubVersion}-stubs.jar")) {
                 classifier = 'stubs'
             }
         }
