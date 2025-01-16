@@ -33,14 +33,12 @@ class PostIntegrationTest {
     @Test
     void getAllPosts() {
         List<Post> posts = restfulClient.getAllPosts();
-        assertThat(posts).isNotNull();
         assertThat(posts).isNotNull().hasSize(3);
     }
 
     @Test
     void getPostsByUserId() {
         List<Post> userPosts = restfulClient.getPostsByUserId(19);
-        assertThat(userPosts).isNotNull();
         assertThat(userPosts).isNotNull().hasSize(2);
     }
 
@@ -57,5 +55,21 @@ class PostIntegrationTest {
         Post userPosts = restfulClient.getPostByUserIdAndPostId(4, 99);
         assertThat(userPosts).isNotNull();
         assertThat(userPosts.getId()).isEqualTo(1);
+    }
+
+    @Test
+    void savePost() {
+        Post savePost = restfulClient.savePost(new Post(null, "Title", "Content", 1));
+        assertThat(savePost).isNotNull();
+        assertThat(savePost.getId()).isEqualTo(1);
+    }
+
+    @Test
+    void saveMultiplePost() {
+        List<Post> postList = restfulClient.saveAllPost(List.of(
+                new Post(null, "Title", "Content", 1),
+                new Post(null, "Title 1", "Content 1", 1)
+        ));
+        assertThat(postList).isNotNull().hasSize(2);
     }
 }
