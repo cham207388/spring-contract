@@ -1,39 +1,33 @@
 package com.abc.contracts.producer;
 
-import com.abc.contracts.producer.config.TestConfig;
-import com.abc.contracts.producer.controllers.PostController;
-import com.abc.contracts.producer.domains.Post;
-import com.abc.contracts.producer.services.PostService;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-
 import java.util.List;
 
-import static com.abc.contracts.producer.utils.TestUtils.*;
+import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import com.abc.contracts.producer.controllers.PostController;
+import com.abc.contracts.producer.domains.Post;
+import com.abc.contracts.producer.services.PostService;
+import static com.abc.contracts.producer.utils.TestUtils.getAllPostsResponse;
+import static com.abc.contracts.producer.utils.TestUtils.getPostByUserIdAndPostIdResponse;
+import static com.abc.contracts.producer.utils.TestUtils.getPostsByUseridResponse;
+
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 
 @SpringBootTest
-@ContextConfiguration(classes = TestConfig.class)
 public abstract class BaseContractTest {
 
-    private final PostController postController;
-    private final PostService postService;
+    @Autowired
+    private PostController postController;
+    
+    @MockitoBean
+    private PostService postService;
 
-    public BaseContractTest(PostController postController, PostService postService) {
-        this.postController = postController;
-        this.postService = postService;
-    }
-
-    public BaseContractTest() {
-        this.postService = Mockito.mock(PostService.class); // Mock PostService
-        this.postController = new PostController(postService); // Use mocked PostService
-    }
 
     @BeforeEach
     void setUp() {
