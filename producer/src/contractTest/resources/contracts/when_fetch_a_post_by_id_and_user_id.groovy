@@ -4,7 +4,7 @@ import org.springframework.cloud.contract.spec.Contract
 import org.springframework.cloud.contract.spec.internal.HttpMethods
 
 Contract.make {
-    description "Should return post for a given userId and postId"
+    description 'Should return post for a given userId and postId'
 
     request {
         method HttpMethods.GET
@@ -18,8 +18,8 @@ Contract.make {
         }
         body(
                 id: 1,
-                title: "Tool",
-                content: "Gradle",
+                title: 'Tool',
+                content: 'Gradle',
                 userId: 1
         )
     }

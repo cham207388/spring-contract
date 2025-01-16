@@ -31,7 +31,7 @@ jobs:
     - name: Verify Gradle Version
       run: ./gradlew --version
 
-    - name: Build project
+    - name: Build producer
       run: |
         ./gradlew :producer:clean :producer:build --stacktrace
 
@@ -39,6 +39,6 @@ jobs:
       run: |
         ./gradlew :producer:publish
 
-    - name: Consumer test
+    - name: Test consumer
       run: |
-        ./gradlew :consumer:clean :consumer:build
+        ./gradlew :consumer:clean :consumer:build -Dspring.profiles.active=test

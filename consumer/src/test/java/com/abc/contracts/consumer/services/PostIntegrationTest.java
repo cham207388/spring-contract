@@ -1,5 +1,7 @@
 package com.abc.contracts.consumer.services;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.abc.contracts.consumer.client.RestfulClient;
 import com.abc.contracts.consumer.domains.Post;
-import com.abc.contracts.consumer.domains.PostResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureStubRunner(
@@ -30,16 +31,14 @@ class PostIntegrationTest {
 
     @Test
     void getAllPosts() {
-        PostResponse posts = restfulClient.getAllPosts();
-        assertThat(posts).isNotNull();
-        assertThat(posts.getPosts()).isNotNull().hasSize(3);
+        List<Post> posts = restfulClient.getAllPosts();
+        assertThat(posts).isNotNull().hasSize(3);
     }
 
     @Test
     void getPostsByUserId() {
-        PostResponse userPosts = restfulClient.getPostsByUserId(19);
-        assertThat(userPosts).isNotNull();
-        assertThat(userPosts.getPosts()).isNotNull().hasSize(2);
+        List<Post> userPosts = restfulClient.getPostsByUserId(19);
+        assertThat(userPosts).isNotNull().hasSize(2);
     }
 
     @Test
@@ -55,5 +54,21 @@ class PostIntegrationTest {
         Post userPosts = restfulClient.getPostByUserIdAndPostId(4, 99);
         assertThat(userPosts).isNotNull();
         assertThat(userPosts.getId()).isEqualTo(1);
+    }
+
+    @Test
+    void savePost() {
+        Post savePost = restfulClient.savePost(new Post(null, "Title", "Content", 1));
+        assertThat(savePost).isNotNull();
+        assertThat(savePost.getId()).isEqualTo(1);
+    }
+
+    @Test
+    void saveMultiplePost() {
+        List<Post> postList = restfulClient.saveAllPost(List.of(
+                new Post(null, "Title", "Content", 1),
+                new Post(null, "Title 1", "Content 1", 1)
+        ));
+        assertThat(postList).isNotNull().hasSize(2);
     }
 }

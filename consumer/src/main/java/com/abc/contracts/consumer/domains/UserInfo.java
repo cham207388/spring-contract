@@ -1,12 +1,23 @@
 package com.abc.contracts.consumer.domains;
 
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.*;
 
-import java.util.List;
-
-@Data
+@Getter
+@Setter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserInfo {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
-    private String firstName;
-    private List<Post> posts;
+    private String fullName;
+    private String email;
 }

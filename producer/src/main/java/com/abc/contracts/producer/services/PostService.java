@@ -1,43 +1,45 @@
 package com.abc.contracts.producer.services;
 
-
+import java.util.List;
 import com.abc.contracts.producer.domains.Post;
-import com.abc.contracts.producer.domains.PostResponse;
+import com.abc.contracts.producer.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
-import static com.abc.contracts.producer.repository.UserRepository.POSTS;
-
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
+    private final PostRepository postRepository;
 
-    public PostResponse getAllPosts() {
+    public List<Post> getAllPosts() {
         log.info("Fetching all posts");
-        return new PostResponse(0, POSTS);
+
+        return postRepository.findAll();
     }
 
-    public PostResponse getPostsByUserid(int userId) {
+    public List<Post> getPostsByUserid(int userId) {
         log.info("Fetching user: {} posts", userId);
-        List<Post> posts = POSTS.stream()
-                .filter(post -> post.getUserId() == userId)
-                .toList();
-        return new PostResponse(userId, posts);
+
+        return postRepository.findAllByUserId(userId);
     }
 
     public Post save(Post post) {
-        POSTS.add(post);
-        return post;
+        Post response = postRepository.save(post);
+        log.info("post response id: {}", response.getId());
+        return response;
+    }
+    
+    public List<Post> savePosts(List<Post> posts) {
+        return postRepository.saveAll(posts);
+        
     }
 
     public Post getPostByUserIdAndPostId(int id, int userId) {
-        return POSTS.stream()
-                .filter(post -> post.getUserId() == userId && post.getId() == id)
-                .findFirst()
-                .orElse(null);
+        Post response = postRepository.findByIdAndUserId(id, userId);
+        log.info("response id: {}", response.getId());
+        return response;
     }
 }
