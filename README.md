@@ -6,7 +6,8 @@ Testing the API contract between the producer and consumer is a good way to ensu
 
 - [Spring Cloud Contract Reference](https://docs.spring.io/spring-cloud-contract/reference/index.html)
 - [Contract test guide](https://spring.io/guides/gs/contract-rest)
-- [SoftwareMill](https://softwaremill.com/contract-testing-spring-cloud-contract/)
+- [Software Mill blog](https://softwaremill.com/contract-testing-spring-cloud-contract/)
+- [DSL Dynamic Properties](https://docs.spring.io/spring-cloud-contract/reference/project-features-contract/dsl-dynamic-properties.html)
 
 ## Producer side
 
