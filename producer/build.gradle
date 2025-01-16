@@ -80,7 +80,7 @@ tasks.named('test') {
 }
 
 // Task to rename the artifact
-task renameStubArtifact {
+tasks.register('renameStubArtifact') {
     inputs.file("${buildDir}/libs/${project.name}-${version}-stubs.jar") // Original artifact
     outputs.file("${buildDir}/libs/${project.name}-${stubVersion}-stubs.jar") // Renamed artifact
 
