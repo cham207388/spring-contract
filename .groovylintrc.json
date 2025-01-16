@@ -6,6 +6,9 @@
         },
         "DuplicateStringLiteral": {
             "enabled": false
+        },
+        "LineLength": {
+            "enabled": false
         }
     }
 }
