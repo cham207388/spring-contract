@@ -22,9 +22,9 @@ Contract.make {
     }
 
     response {
-        status OK()
+        status CREATED()
         headers {
-            header 'Content-Type': 'application/json'
+            header(contentType(), applicationJson())
         }
         body(
                 id: 1, // Server generates ID

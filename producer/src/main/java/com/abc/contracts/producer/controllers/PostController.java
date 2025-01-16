@@ -6,6 +6,7 @@ import com.abc.contracts.producer.domains.Post;
 import com.abc.contracts.producer.services.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,15 +35,11 @@ public class PostController {
     @PostMapping(value = "/posts", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Post> post(@RequestBody Post post) {
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(postService.save(post));
+        return new ResponseEntity<>(postService.save(post), HttpStatus.CREATED);
     }
 
     @PostMapping("/posts/all")
     public ResponseEntity<List<Post>> posts(@RequestBody List<Post> posts) {
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .body(postService.savePosts(posts));
+        return new ResponseEntity<>(postService.savePosts(posts), HttpStatus.CREATED);
     }
 }
