@@ -81,20 +81,29 @@ tasks.named('test') {
 
 // Task to rename the artifact
 tasks.register('renameStubArtifact') {
-    inputs.file("${buildDir}/libs/${project.name}-${version}-stubs.jar") // Original artifact
-    outputs.file("${buildDir}/libs/${project.name}-${stubVersion}-stubs.jar") // Renamed artifact
+    // Access the input and output files using layout.buildDirectory
+    def sourcePath = layout.buildDirectory.file("libs/${project.name}-${version}-stubs.jar")
+    def targetPath = layout.buildDirectory.file("libs/${project.name}-${stubVersion}-stubs.jar")
+
+    inputs.file(sourcePath) // Original artifact
+    outputs.file(targetPath) // Renamed artifact
 
     doLast {
-        def sourceFile = file("${buildDir}/libs/${project.name}-${version}-stubs.jar")
-        def targetDir = file("${buildDir}/libs")
-        def targetFile = file("${targetDir}/${project.name}-${stubVersion}-stubs.jar")
+        def sourceFile = sourcePath.get().asFile
+        def targetFile = targetPath.get().asFile
+        def targetDir = targetFile.parentFile
 
+        // Ensure the target directory exists
         if (!targetDir.exists()) {
             targetDir.mkdirs()
         }
-        sourceFile.renameTo(targetFile)
 
-        println "Renamed artifact created: ${targetFile}"
+        // Rename the file
+        if (sourceFile.renameTo(targetFile)) {
+            println "Renamed artifact created: ${targetFile}"
+        } else {
+            throw new GradleException("Failed to rename ${sourceFile} to ${targetFile}")
+        }
     }
 }
 
