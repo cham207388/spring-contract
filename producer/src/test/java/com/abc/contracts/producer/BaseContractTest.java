@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.List;
+
 import static com.abc.contracts.producer.utils.TestUtils.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -41,5 +43,6 @@ public abstract class BaseContractTest {
         when(postService.getPostsByUserid(anyInt())).thenReturn(getPostsByUseridResponse());
         when(postService.getPostByUserIdAndPostId(anyInt(), anyInt())).thenReturn(getPostByUserIdAndPostIdResponse());
         when(postService.save(any(Post.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(postService.savePosts(any(List.class))).thenAnswer(i -> i.getArguments()[0]);
     }
 }
