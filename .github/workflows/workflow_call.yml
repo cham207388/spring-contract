@@ -77,7 +77,13 @@ jobs:
       run: |
         echo "Generated YAML steps for downloads:"
         cat download-steps.yaml
-        
+          # Debug downloaded artifacts
+    - name: Debug artifact download
+      run: |
+        echo "Checking artifact directories..."
+        ls -la ~/.m2/repository/com/abc/contracts/ || true
+        ls -la ~/.m2/repository/com/abc/contracts/producer/0.0.1-RELEASE/ || true
+        ls -la ~/.m2/repository/com/abc/contracts/consumer/0.0.1-RELEASE/ || true
     - name: Rename stub jars
       run: |
         BASE_DIR=~/.m2/repository/com/abc/contracts/
