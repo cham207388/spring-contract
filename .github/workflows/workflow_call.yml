@@ -52,20 +52,20 @@ jobs:
           echo ""
         done
         
-    - name: Download all artifacts
-      shell: bash
+    - name: Download artifacts dynamically
       run: |
-        echo "Processing artifacts dynamically..."
-        echo '${{ inputs.artifacts }}' | jq -c '.[]' > artifact_list.json
+        echo '${{ inputs.artifacts }}' | jq -c '.[]' | while read artifact; do
+          name=$(echo "$artifact" | jq -r '.name')
+          path=$(echo "$artifact" | jq -r '.path')
+          echo "Creating step for downloading $name to $path"
 
-        while IFS= read -r line; do
-          artifact_name=$(echo "$line" | jq -r '.name')
-          artifact_path=$(echo "$line" | jq -r '.path')
-          
-          echo "Downloading artifact: $artifact_name to $artifact_path"
-          mkdir -p "$artifact_path"
-          gh actions download-artifact --name "$artifact_name" --path "$artifact_path"
-        done < artifact_list.json
+          # Generate a YAML step to dynamically invoke actions/download-artifact
+          echo "- name: Download $name" >> steps.yaml
+          echo "  uses: actions/download-artifact@v4" >> steps.yaml
+          echo "  with:" >> steps.yaml
+          echo "    name: $name" >> steps.yaml
+          echo "    path: $path" >> steps.yaml
+        done
 
     - name: Rename stub jars
       run: |
