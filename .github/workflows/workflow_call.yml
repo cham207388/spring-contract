@@ -65,6 +65,7 @@ jobs:
       run: |
         ls -ltra ~/.m2/repository/com/abc/contracts
         ls -ltra ~/.m2/repository/com/abc/contracts/producer
+        ls -ltra ~/.m2/repository/com/abc/contracts/producer/RELEASE
       
     - name: Rename stub jars
       run: |
@@ -82,6 +83,7 @@ jobs:
       run: |
         ls -ltra ~/.m2/repository/com/abc/contracts
         ls -ltra ~/.m2/repository/com/abc/contracts/producer
+        ls -ltra ~/.m2/repository/com/abc/contracts/producer/RELEASE
     - name: Build consumer
       run: |
         ./gradlew :consumer:clean :consumer:build
