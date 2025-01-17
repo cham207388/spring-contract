@@ -52,21 +52,25 @@ jobs:
           echo ""
         done
         
-    - name: Download artifacts dynamically
+      # Download artifacts dynamically
+    - name: Process artifacts for downloading
+      id: parse-artifacts
       run: |
-        echo '${{ inputs.artifacts }}' | jq -c '.[]' | while read artifact; do
+        echo '${{ inputs.artifacts }}' > artifacts.json
+        echo "Parsed artifacts:"
+        cat artifacts.json
+
+    - name: Download artifacts
+      run: |
+        echo "Starting artifact download..."
+        jq -c '.[]' artifacts.json | while read artifact; do
           name=$(echo "$artifact" | jq -r '.name')
           path=$(echo "$artifact" | jq -r '.path')
-          echo "Creating step for downloading $name to $path"
 
-          # Generate a YAML step to dynamically invoke actions/download-artifact
-          echo "- name: Download $name" >> steps.yaml
-          echo "  uses: actions/download-artifact@v4" >> steps.yaml
-          echo "  with:" >> steps.yaml
-          echo "    name: $name" >> steps.yaml
-          echo "    path: $path" >> steps.yaml
+          echo "Downloading $name to $path..."
+          mkdir -p "$path"  # Ensure the directory exists
+          gh artifact download "$name" --path "$path"
         done
-
     - name: Rename stub jars
       run: |
         BASE_DIR=~/.m2/repository/com/abc/contracts/
