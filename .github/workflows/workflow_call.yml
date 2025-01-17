@@ -62,7 +62,7 @@ jobs:
         cat artifacts.json
 
     # Dynamically process each artifact
-    - name: Download artifacts
+    - name: Download artifacts dynamically
       run: |
         echo "Downloading artifacts..."
         jq -c '.[]' artifacts.json | while read artifact; do
@@ -70,25 +70,9 @@ jobs:
           path=$(echo "$artifact" | jq -r '.path')
 
           echo "Downloading $name to $path..."
-          echo "  - uses: actions/download-artifact@v4" >> download-steps.yaml
-          echo "    with:" >> download-steps.yaml
-          echo "      name: $name" >> download-steps.yaml
-          echo "      path: $path" >> download-steps.yaml
+          mkdir -p "$path"
+          gh actions download-artifact --name "$name" --path "$path"
         done
-
-    - name: Run download steps
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const fs = require('fs');
-          const yaml = require('js-yaml');
-
-          const steps = fs.readFileSync('download-steps.yaml', 'utf-8');
-          yaml.safeLoadAll(steps, (doc) => {
-            doc.steps.forEach(async (step) => {
-              console.log("STEP OUTPUT", step);
-            });
-          })
 
     - name: Debug downloaded artifacts
       run: |
