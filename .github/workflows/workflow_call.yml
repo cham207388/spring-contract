@@ -62,17 +62,41 @@ jobs:
         cat artifacts.json
 
     # Dynamically process each artifact
-    - name: Download artifacts dynamically
+      # Parse artifacts and create YAML steps for downloading
+    - name: Generate dynamic download steps
+      id: generate-steps
       run: |
-        echo "Downloading artifacts..."
+        echo '${{ inputs.artifacts }}' | jq -c '.[]' > artifacts.json
+        echo "steps:" > download-steps.yaml
         jq -c '.[]' artifacts.json | while read artifact; do
           name=$(echo "$artifact" | jq -r '.name')
           path=$(echo "$artifact" | jq -r '.path')
 
-          echo "Downloading $name to $path..."
-          mkdir -p "$path"
-          gh actions download-artifact --name "$name" --path "$path"
+          echo "- name: Download $name" >> download-steps.yaml
+          echo "  uses: actions/download-artifact@v4" >> download-steps.yaml
+          echo "  with:" >> download-steps.yaml
+          echo "    name: $name" >> download-steps.yaml
+          echo "    path: $path" >> download-steps.yaml
         done
+
+    - name: Debug dynamic steps
+      run: cat download-steps.yaml
+
+    - name: Execute dynamic download steps
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const yaml = require('js-yaml');
+          const steps = yaml.load(fs.readFileSync('download-steps.yaml', 'utf8'));
+
+          for (const step of steps.steps) {
+            console.log(`Executing: ${step.name}`);
+            await github.actions.downloadArtifact({
+              name: step.with.name,
+              path: step.with.path
+            });
+          }
 
     - name: Debug downloaded artifacts
       run: |
