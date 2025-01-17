@@ -54,49 +54,34 @@ jobs:
         
       # Download artifacts dynamically
 
-    - name: Parse artifacts
+    - name: Parse and validate artifacts
       id: parse-artifacts
       run: |
         echo '${{ inputs.artifacts }}' > artifacts.json
-        echo "Artifacts to process:"
-        cat artifacts.json
+        echo "Validating JSON input..."
+        if ! jq empty artifacts.json; then
+          echo "Invalid JSON format in artifacts input."
+          exit 1
+        fi
+        echo "Artifacts input is valid."
 
-    # Dynamically process each artifact
-      # Parse artifacts and create YAML steps for downloading
-    - name: Generate dynamic download steps
-      id: generate-steps
+    # Dynamically download artifacts
+    - name: Download artifacts
       run: |
-        echo '${{ inputs.artifacts }}' | jq -c '.[]' > artifacts.json
-        echo "steps:" > download-steps.yaml
+        echo "Downloading artifacts..."
         jq -c '.[]' artifacts.json | while read artifact; do
           name=$(echo "$artifact" | jq -r '.name')
           path=$(echo "$artifact" | jq -r '.path')
 
-          echo "- name: Download $name" >> download-steps.yaml
-          echo "  uses: actions/download-artifact@v4" >> download-steps.yaml
-          echo "  with:" >> download-steps.yaml
-          echo "    name: $name" >> download-steps.yaml
-          echo "    path: $path" >> download-steps.yaml
+          echo "Downloading $name to $path..."
+          mkdir -p "$path"
+          echo "- name: $name"
+          echo "  uses: actions/download-artifact@v4"
+          echo "  with:"
+          echo "    name: $name"
+          echo "    path: $path"
         done
 
-    - name: Debug dynamic steps
-      run: cat download-steps.yaml
-
-    - name: Execute dynamic download steps
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const fs = require('fs');
-          const yaml = require('js-yaml');
-          const steps = yaml.load(fs.readFileSync('download-steps.yaml', 'utf8'));
-
-          for (const step of steps.steps) {
-            console.log(`Executing: ${step.name}`);
-            await github.actions.downloadArtifact({
-              name: step.with.name,
-              path: step.with.path
-            });
-          }
 
     - name: Debug downloaded artifacts
       run: |
