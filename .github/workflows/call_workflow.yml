@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - 5.1-upload-download-with-matrix
+      - 5.2-upload-download-with-matrix-rename
 
 jobs:
   build:
