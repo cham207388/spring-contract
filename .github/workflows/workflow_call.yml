@@ -53,37 +53,33 @@ jobs:
         done
         
       # Download artifacts dynamically
-    - name: Parse artifacts for troubleshooting
+
+    - name: Parse artifacts
       id: parse-artifacts
       run: |
         echo '${{ inputs.artifacts }}' > artifacts.json
         echo "Artifacts to process:"
         cat artifacts.json
 
-    - name: Download artifacts dynamically
+    - name: Download artifacts
       run: |
         echo "Downloading artifacts..."
         jq -c '.[]' artifacts.json | while read artifact; do
           name=$(echo "$artifact" | jq -r '.name')
           path=$(echo "$artifact" | jq -r '.path')
-          echo "- name: $name" >> download-steps.yaml
-          echo "  uses: actions/download-artifact@v4" >> download-steps.yaml
-          echo "  with:" >> download-steps.yaml
-          echo "    name: $name" >> download-steps.yaml
-          echo "    path: $path" >> download-steps.yaml
+
+          echo "Downloading $name to $path..."
+          mkdir -p "$path"  # Ensure directory exists
+          actions/download-artifact@v4 --name "$name" --path "$path"
         done
 
-    - name: Run download steps
+    - name: Debug downloaded artifacts
       run: |
-        echo "Generated YAML steps for downloads:"
-        cat download-steps.yaml
-          # Debug downloaded artifacts
-    - name: Debug artifact download
-      run: |
-        echo "Checking artifact directories..."
+        echo "Verifying downloaded artifacts..."
         ls -la ~/.m2/repository/com/abc/contracts/ || true
         ls -la ~/.m2/repository/com/abc/contracts/producer/0.0.1-RELEASE/ || true
         ls -la ~/.m2/repository/com/abc/contracts/consumer/0.0.1-RELEASE/ || true
+
     - name: Rename stub jars
       run: |
         BASE_DIR=~/.m2/repository/com/abc/contracts/
@@ -92,9 +88,9 @@ jobs:
           RELEASE_JAR=$(echo "$jar" | sed 's/-SNAPSHOT-/-RELEASE-/')
           echo "Renaming $jar to $RELEASE_JAR"
           mv "$jar" "$RELEASE_JAR"
-        done
-        
-    - name: Check the mvn repo
+        done        
+  
+    - name: Verify renamed Jar
       run: |
         ls -ltra ~/.m2/repository/com/abc/contracts
         ls -ltra ~/.m2/repository/com/abc/contracts/producer
