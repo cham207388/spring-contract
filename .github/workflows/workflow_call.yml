@@ -43,6 +43,17 @@ jobs:
         name: producer-0.0.1-SNAPSHOT-stubs.jar
         path: producer/build/libs/producer-0.0.1-SNAPSHOT-stubs.jar
 
+    - name: Print all artifacts for troubleshooting
+      run: |
+        echo "Artifacts list:"
+        echo '${{ inputs.artifacts }}' | jq -c '.[]' | while read artifact; do
+          name=$(echo "$artifact" | jq -r '.name')
+          path=$(echo "$artifact" | jq -r '.path')
+          echo "Artifact name: $name"
+          echo "Artifact path: $path"
+          echo ""
+        done
+        
     - name: Download stub artifact from GitHub Packages
       uses: actions/download-artifact@v4
       with:
