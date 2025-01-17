@@ -53,24 +53,31 @@ jobs:
         done
         
       # Download artifacts dynamically
-    - name: Process artifacts for downloading
+    - name: Parse artifacts for troubleshooting
       id: parse-artifacts
       run: |
         echo '${{ inputs.artifacts }}' > artifacts.json
-        echo "Parsed artifacts:"
+        echo "Artifacts to process:"
         cat artifacts.json
 
-    - name: Download artifacts
+    - name: Download artifacts dynamically
       run: |
-        echo "Starting artifact download..."
+        echo "Downloading artifacts..."
         jq -c '.[]' artifacts.json | while read artifact; do
           name=$(echo "$artifact" | jq -r '.name')
           path=$(echo "$artifact" | jq -r '.path')
-
-          echo "Downloading $name to $path..."
-          mkdir -p "$path"  # Ensure the directory exists
-          gh artifact download "$name" --path "$path"
+          echo "- name: $name" >> download-steps.yaml
+          echo "  uses: actions/download-artifact@v4" >> download-steps.yaml
+          echo "  with:" >> download-steps.yaml
+          echo "    name: $name" >> download-steps.yaml
+          echo "    path: $path" >> download-steps.yaml
         done
+
+    - name: Run download steps
+      run: |
+        echo "Generated YAML steps for downloads:"
+        cat download-steps.yaml
+        
     - name: Rename stub jars
       run: |
         BASE_DIR=~/.m2/repository/com/abc/contracts/
@@ -104,6 +111,7 @@ jobs:
         ls -ltra ~/.m2/repository/com/abc/contracts
         ls -ltra ~/.m2/repository/com/abc/contracts/producer
         ls -ltra ~/.m2/repository/com/abc/contracts/producer/0.0.1-RELEASE
+    
     - name: Build consumer
       run: |
         ./gradlew :consumer:clean :consumer:build
