@@ -66,16 +66,17 @@ jobs:
         echo "Artifacts input is valid."
         cat artifacts.json
 
-    # Download artifacts dynamically
+    # Dynamically process each artifact
     - name: Download artifacts
       run: |
+        echo "Downloading artifacts..."
         jq -c '.[]' artifacts.json | while read artifact; do
           name=$(echo "$artifact" | jq -r '.name')
           path=$(echo "$artifact" | jq -r '.path')
 
           echo "Downloading $name to $path..."
           mkdir -p "$path"
-          actions/download-artifact@v4 --name "$name" --path "$path" || echo "Artifact $name not found."
+          curl -L -O "$name" -o "$path"
         done
 
 
