@@ -10,9 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        artifact: ${{ fromJson(inputs.artifacts) || '[]'}}
     steps:
 
     - name: Checkout code
