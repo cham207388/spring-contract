@@ -55,11 +55,24 @@ jobs:
           echo ""
         done
         
-    - name: Download stub artifact from GitHub Packages
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ matrix.artifact.name }}
-        path: ${{ matrix.artifact.path }}
+    - name: Download and process stub artifacts
+      run: |
+        echo '${{ inputs.artifacts }}' | jq -c '.[]' | while read artifact; do
+          name=$(echo "$artifact" | jq -r '.name')
+          path=$(echo "$artifact" | jq -r '.path')
+
+          echo "Downloading artifact: $name to $path"
+          actions/download-artifact@v4 --name "$name" --path "$path"
+
+          # Rename JAR files
+          BASE_DIR=$(dirname "$path")
+          echo "Renaming JAR files under $BASE_DIR"
+          find "$BASE_DIR" -type f -name '*-SNAPSHOT-stubs.jar' | while read jar; do
+            RELEASE_JAR=$(echo "$jar" | sed 's/-SNAPSHOT-/-RELEASE-/')
+            echo "Renaming $jar to $RELEASE_JAR"
+            mv "$jar" "$RELEASE_JAR"
+          done
+        done
         
     - name: Check the mvn repo
       run: |
