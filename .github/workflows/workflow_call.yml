@@ -1,16 +1,18 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - 5-upload-download-artifact
-  pull_request:
-    branches:
-      - mainx
+  workflow_call:
+    inputs:
+      artifacts:
+        type: string
+        required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        artifact: ${{ fromJson(inputs.artifacts) || '[]'}}
     steps:
 
     - name: Checkout code
@@ -31,7 +33,7 @@ jobs:
     - name: Verify Gradle Version
       run: ./gradlew --version
 
-    - name: Build project
+    - name: Build producer
       run: |
         ./gradlew :producer:clean :producer:build --stacktrace
         
@@ -41,16 +43,12 @@ jobs:
         name: producer-0.0.1-SNAPSHOT-stubs.jar
         path: producer/build/libs/producer-0.0.1-SNAPSHOT-stubs.jar
 
-    # - name: Publish to stub jar Maven Central 
-    #   run: |
-    #     ./gradlew :producer:publish
-
     - name: Download stub artifact from GitHub Packages
       uses: actions/download-artifact@v4
       with:
-        name: producer-0.0.1-SNAPSHOT-stubs.jar
-        path: ~/.m2/repository/com/abc/contracts/producer/0.0.1-SNAPSHOT/
+        name: ${{ matrix.artifact.name }}
+        path: ${{ matrix.artifact.path }}
 
-    - name: Consumer test
+    - name: Build consumer
       run: |
         ./gradlew :consumer:clean :consumer:build

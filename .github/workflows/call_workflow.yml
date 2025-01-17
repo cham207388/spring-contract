@@ -1,0 +1,18 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 5.1-upload-download-with-matrix
+
+jobs:
+  build:
+    uses: ./.github/workflows/workflow_call.yml
+    with:
+      artifacts: |
+        [
+          {
+            "name": "producer-0.0.1-SNAPSHOT-stubs.jar",
+            "path": "~/.m2/repository/com/abc/contracts/producer/0.0.1-SNAPSHOT/"
+          }
+        ]
