@@ -54,7 +54,7 @@ jobs:
         
       # Download artifacts dynamically
 
-    - name: Parse and validate artifacts
+    - name: Parse artifacts
       id: parse-artifacts
       run: |
         echo '${{ inputs.artifacts }}' > artifacts.json
@@ -64,23 +64,20 @@ jobs:
           exit 1
         fi
         echo "Artifacts input is valid."
+        cat artifacts.json
 
-    # Dynamically download artifacts
+    # Download artifacts dynamically
     - name: Download artifacts
       run: |
-        echo "Downloading artifacts..."
         jq -c '.[]' artifacts.json | while read artifact; do
           name=$(echo "$artifact" | jq -r '.name')
           path=$(echo "$artifact" | jq -r '.path')
 
           echo "Downloading $name to $path..."
           mkdir -p "$path"
-          echo "- name: $name"
-          echo "  uses: actions/download-artifact@v4"
-          echo "  with:"
-          echo "    name: $name"
-          echo "    path: $path"
+          actions/download-artifact@v4 --name "$name" --path "$path" || echo "Artifact $name not found."
         done
+
 
 
     - name: Debug downloaded artifacts
