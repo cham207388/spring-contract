@@ -52,23 +52,29 @@ jobs:
           echo ""
         done
         
-    - name: Download and process stub artifacts
+    - name: Download all artifacts
+      shell: bash
       run: |
-        echo '${{ inputs.artifacts }}' | jq -c '.[]' | while read artifact; do
-          name=$(echo "$artifact" | jq -r '.name')
-          path=$(echo "$artifact" | jq -r '.path')
+        echo "Processing artifacts dynamically..."
+        echo '${{ inputs.artifacts }}' | jq -c '.[]' > artifact_list.json
 
-          echo "Downloading artifact: $name to $path"
-          actions/download-artifact@v4 --name "$name" --path "$path"
+        while IFS= read -r line; do
+          artifact_name=$(echo "$line" | jq -r '.name')
+          artifact_path=$(echo "$line" | jq -r '.path')
+          
+          echo "Downloading artifact: $artifact_name to $artifact_path"
+          mkdir -p "$artifact_path"
+          gh actions download-artifact --name "$artifact_name" --path "$artifact_path"
+        done < artifact_list.json
 
-          # Rename JAR files
-          BASE_DIR=$(dirname "$path")
-          echo "Renaming JAR files under $BASE_DIR"
-          find "$BASE_DIR" -type f -name '*-SNAPSHOT-stubs.jar' | while read jar; do
-            RELEASE_JAR=$(echo "$jar" | sed 's/-SNAPSHOT-/-RELEASE-/')
-            echo "Renaming $jar to $RELEASE_JAR"
-            mv "$jar" "$RELEASE_JAR"
-          done
+    - name: Rename stub jars
+      run: |
+        BASE_DIR=~/.m2/repository/com/abc/contracts/
+        echo "Renaming JAR files under $BASE_DIR"
+        find "$BASE_DIR" -type f -name '*-SNAPSHOT-stubs.jar' | while read jar; do
+          RELEASE_JAR=$(echo "$jar" | sed 's/-SNAPSHOT-/-RELEASE-/')
+          echo "Renaming $jar to $RELEASE_JAR"
+          mv "$jar" "$RELEASE_JAR"
         done
         
     - name: Check the mvn repo
