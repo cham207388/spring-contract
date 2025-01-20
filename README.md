@@ -4,6 +4,7 @@ Testing the API contract between the producer and consumer is a good way to ensu
 
 ## Resources
 
+- [Udemy](https://www.udemy.com/course/contract-testing-with-spring-cloud-contract/)
 - [Spring Cloud Contract Reference](https://docs.spring.io/spring-cloud-contract/reference/index.html)
 - [Contract test guide](https://spring.io/guides/gs/contract-rest)
 - [Software Mill blog](https://softwaremill.com/contract-testing-spring-cloud-contract/)
