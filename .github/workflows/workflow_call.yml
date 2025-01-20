@@ -122,9 +122,7 @@ jobs:
   
     - name: Verify renamed Jar
       run: |
-        ls -ltra ~/.m2/repository/com/abc/contracts
-        ls -ltra ~/.m2/repository/com/abc/contracts/producer
-        ls -ltra ~/.m2/repository/com/abc/contracts/producer/0.0.1-RELEASE
+        ls -R ~/.m2/repository/com/abc/contracts
       
     - name: Rename stub jars
       run: |
@@ -140,9 +138,7 @@ jobs:
         
     - name: After rename Check the mvn repo
       run: |
-        ls -ltra ~/.m2/repository/com/abc/contracts
-        ls -ltra ~/.m2/repository/com/abc/contracts/producer
-        ls -ltra ~/.m2/repository/com/abc/contracts/producer/0.0.1-RELEASE
+        ls -R ~/.m2/repository/com/abc/contracts
     
     - name: Build consumer
       run: |
