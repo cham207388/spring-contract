@@ -41,13 +41,12 @@ public class UserService {
     @Transactional
     public int saveUser(UserRequest request) {
         UserInfo userInfo = new UserInfo();
-        userInfo.setId(request.getId());
         userInfo.setFullName(request.getFullName());
         userInfo.setEmail(request.getEmail());
-        userRepository.save(userInfo);
+        UserInfo savedUser = userRepository.save(userInfo);
         List<Post> posts = request.getPosts();
         posts.forEach(post -> post.setUserId(userInfo.getId()));
         postsService.saveAllPost(posts);
-        return request.getId();
+        return savedUser.getId();
     }
 }

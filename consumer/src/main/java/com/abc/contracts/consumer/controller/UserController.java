@@ -1,5 +1,6 @@
 package com.abc.contracts.consumer.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import com.abc.contracts.consumer.services.UserService;
@@ -35,6 +36,6 @@ public class UserController {
 
     @PostMapping("/posts/users")
     public ResponseEntity<Integer> saveUser(@RequestBody UserRequest userInfo) {
-        return new ResponseEntity<>(userService.saveUser(userInfo), HttpStatus.OK);
+        return new ResponseEntity<>(userService.saveUser(userInfo), HttpStatus.CREATED);
     }
 }

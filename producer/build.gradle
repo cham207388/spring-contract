@@ -39,6 +39,7 @@ publishing {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/release' }
 }
 
 ext {
@@ -59,6 +60,14 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2' // Replace version with the one you need
     implementation 'org.springframework.boot:spring-boot-starter-json'
+
+    // add tracing
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.2'
+    implementation 'io.opentelemetry:opentelemetry-exporter-zipkin:1.46.0'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 }
 
 dependencyManagement {

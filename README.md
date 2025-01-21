@@ -89,6 +89,11 @@ This is the service that is calling the producer. It's also called the client.
 - run the tests
 - these tests will hit the stubs created by the producer instead of interacting with the producer's service directly. Pretty cool!
 
+## Swagger
+
+- [producer swagger](http://localhost:8081/swagger-ui/index.html#/)
+- [consumer swagger](http://localhost:8080/swagger-ui/index.html#/)
+
 ## Learning Ideas
 
 - Spring Rest Clients
