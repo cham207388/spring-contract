@@ -14,10 +14,11 @@ Contract.make {
             header(contentType(), applicationJson())
         }
         body([
-                id     : $(consumer(null), producer(1)), // Allow null for id during creation
-                title  : $(consumer(anyNonEmptyString()), producer('Tool')), // Title string
-                content: $(consumer(anyNonEmptyString()), producer('Gradle')), // Content string
-                userId   : $(consumer(anyInteger()), producer(1)) // ISO LocalDateTime format
+                id     : $(consumer(null), producer(1)),
+                title  : $(consumer(anyNonEmptyString()), producer('Tool')),
+                content: $(consumer(anyNonEmptyString()), producer('Gradle')),
+                userId   : $(consumer(anyInteger()), producer(1)),
+                createdAt : $(consumer(null), producer(anyDateTime()))
         ])
     }
 
@@ -27,10 +28,11 @@ Contract.make {
             header(contentType(), applicationJson())
         }
         body(
-                id: 1, // Server generates ID
-                title: 'Tool', // Server echoes back the title
-                content: 'Gradle', // Server echoes back the content
-                userId: 1 // Server echoes back the userId
+                id: 1,
+                title: 'Tool',
+                content: 'Gradle',
+                userId: 1,
+                createdAt: anyDateTime()
         )
     }
 }

@@ -67,7 +67,12 @@ dependencies {
     implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.2'
     implementation 'io.opentelemetry:opentelemetry-exporter-zipkin:1.46.0'
 
+    // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+    // serializer
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
+
 }
 
 dependencyManagement {

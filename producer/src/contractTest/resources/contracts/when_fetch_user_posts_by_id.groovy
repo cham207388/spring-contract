@@ -26,13 +26,15 @@ Contract.make {
                         id     : 1, // List elements must be maps with proper syntax
                         title  : 'Tool',
                         content: 'Gradle',
-                        userId : 1
+                        userId : 1,
+                        createdAt: anyDateTime()
                 ],
                 [
                         id     : 2,
                         title  : 'Test',
                         content: 'Spring Cloud Contract',
-                        userId : 1
+                        userId : 1,
+                        createdAt: anyDateTime()
                 ]
 
         ])
