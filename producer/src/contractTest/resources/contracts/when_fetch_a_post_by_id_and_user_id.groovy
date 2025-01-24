@@ -20,7 +20,8 @@ Contract.make {
                 id: 1,
                 title: 'Tool',
                 content: 'Gradle',
-                userId: 1
+                userId: 1,
+                createdAt: anyDateTime()
         )
     }
 }

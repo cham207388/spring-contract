@@ -1,4 +1,4 @@
-.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin all stop-db
+.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer
 
 help: ## Show this help message with aligned shortcuts, descriptions, and commands
 	@awk 'BEGIN {FS = ":"; printf "\033[1m%-20s %-40s %s\033[0m\n", "Target", "Description", "Command"} \
@@ -50,9 +50,18 @@ database: # 2. start postgres container
 zipkin:
 	docker container run --rm --name zipkin -d -p 9411:9411 openzipkin/zipkin
 
+producer:
+	./gradlew :producer:bootRun
+
+consumer:
+	./gradlew :consumer:bootRun
+
 # start db, then zipkin, then producer, then consumer, then zipkin
-all: database zipkin
-	./gradlew :producer:bootRun :consumer:bootRun
+db-zipkin: stop-db database stop-zipkin zipkin
+	echo "start database and zipkin"
 
 stop-db:
 	docker container stop contract_db
+
+stop-zipkin:
+	docker container stop zipkin
