@@ -45,7 +45,13 @@ cbc: cleanp buildp
 	echo 'cleaned and built the consumer!'
 	
 database: # 2. start postgres container
-	docker container run --rm --name contract_db -e POSTGRES_DB=contract -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+	docker container run --rm --name contract-db \
+		--network spring-contract \
+		-e POSTGRES_DB=contract \
+		-e POSTGRES_USER=postgres \
+		-e POSTGRES_PASSWORD=postgres \
+		-p 5432:5432 -d \
+		postgres
 
 zipkin:
 	docker container run --rm --name zipkin -d -p 9411:9411 openzipkin/zipkin
@@ -61,7 +67,28 @@ db-zipkin: stop-db database stop-zipkin zipkin
 	echo "start database and zipkin"
 
 stop-db:
-	docker container stop contract_db
+	docker container stop contract-db
 
 stop-zipkin:
 	docker container stop zipkin
+
+## Docker
+
+dc-producer:
+	docker image build -t baicham/spring-contract-producer:v1 ./producer
+
+producer-app:
+	docker container run --rm --name contract-db \
+		--name spring-contract-producer \
+		--network spring-contract \
+		-p 8081:8081 \
+        -e DB_URL=jdbc:postgresql://contract-db:5432/contract \
+        -e DB_USERNAME=postgres \
+        -e DB_PASSWORD=postgres \
+        baicham/spring-contract-producer:v1
+
+dc-network:
+	docker network create spring-contract
+
+dcup:
+	docker compose up

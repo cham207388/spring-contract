@@ -27,12 +27,14 @@ public class RestfulClient {
     @Value("${producer.port}")
     private int port;
 
-    private static final String HOST = "localhost";
+    @Getter
+    @Value("${producer.host:localhost}")
+    private String producerHost;
 
         public List<Post> getAllPosts() {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host(HOST)
+                .host(producerHost)
                 .port(port)
                 .path("/posts")
                 .toUriString();
@@ -47,7 +49,7 @@ public class RestfulClient {
     public List<Post> getPostsByUserId(int userId) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host(HOST)
+                .host(producerHost)
                 .port(port)
                 .path("/posts/users")
                 .queryParam("userId", userId)
@@ -62,7 +64,7 @@ public class RestfulClient {
 
     public Post getPostByUserIdAndPostId(int id, int userId) {
         return restClient.get()
-                .uri("http://localhost:{PORT}/posts/{id}/users/{userId}", port, id, userId)
+                .uri("http://{host}:{PORT}/posts/{id}/users/{userId}", producerHost, port, id, userId)
                 .accept(APPLICATION_JSON)
                 .retrieve()
                 .body(Post.class);
@@ -71,7 +73,7 @@ public class RestfulClient {
     public Post savePost(Post post) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host(HOST)
+                .host(producerHost)
                 .port(port)
                 .path("/posts")
                 .toUriString();
@@ -87,7 +89,7 @@ public class RestfulClient {
     public List<Post> saveAllPost(List<Post> post) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host(HOST)
+                .host(producerHost)
                 .port(port)
                 .path("/posts/all")
                 .toUriString();
