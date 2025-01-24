@@ -1,4 +1,4 @@
-.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer
+.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer dc-network dc-producer dcu dcd
 
 help: ## Show this help message with aligned shortcuts, descriptions, and commands
 	@awk 'BEGIN {FS = ":"; printf "\033[1m%-20s %-40s %s\033[0m\n", "Target", "Description", "Command"} \
@@ -90,5 +90,8 @@ producer-app:
 dc-network:
 	docker network create spring-contract
 
-dcup:
+dcu:
 	docker compose up
+
+dcd:
+	docker compose up -v
