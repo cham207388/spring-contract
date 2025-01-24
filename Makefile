@@ -91,7 +91,7 @@ dc-network:
 	docker network create spring-contract
 
 dcu:
-	docker compose up
+	docker compose up --build
 
 dcd:
-	docker compose up -v
+	docker compose down -v
