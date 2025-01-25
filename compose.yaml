@@ -10,6 +10,8 @@ services:
       DB_USERNAME: "postgres"
       DB_PASSWORD: "postgres"
       ZIPKIN_ENDPOINT: "http://zipkin:9411/api/v2/spans"
+      PRODUCER_PORT: 8081
+      PRODUCER_HOST: producer
     depends_on:
       contract-db:
         condition: service_healthy

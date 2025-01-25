@@ -28,7 +28,7 @@ public class RestfulClient {
     private int port;
 
     @Getter
-    @Value("${producer.host:localhost}")
+    @Value("${producer.host}")
     private String producerHost;
 
         public List<Post> getAllPosts() {

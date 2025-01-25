@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "spring-contract.fullname" . }}
+  name: {{ .Values.application.name }}
   labels:
     {{- include "spring-contract.labels" . | nindent 4 }}
 spec:
