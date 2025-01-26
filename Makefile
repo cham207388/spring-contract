@@ -1,4 +1,4 @@
-.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer dc-network producer-image consumer-image dcu dcd deployment
+.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer dc-network producer-image build-images push-images consumer-image dcu dcd deployment
 
 help: ## Show this help message with aligned shortcuts, descriptions, and commands
 	@awk 'BEGIN {FS = ":"; printf "\033[1m%-20s %-40s %s\033[0m\n", "Target", "Description", "Command"} \
@@ -74,16 +74,22 @@ stop-zipkin:
 ## Docker
 
 producer-image:
-	docker image build -t baicham/spring-contract-producer:v3 ./producer
+	docker image build -t baicham/spring-contract-producer:v4 ./producer
 
 consumer-image:
-	docker image build -t baicham/spring-contract-consumer:v3 ./consumer
+	docker image build -t baicham/spring-contract-consumer:v4 ./consumer
 
 push-producer:
-	docker image push baicham/spring-contract-producer:v3
+	docker image push baicham/spring-contract-producer:v4
 
 push-consumer:
-	docker image push baicham/spring-contract-consumer:v3
+	docker image push baicham/spring-contract-consumer:v4
+
+build-images: producer-image consumer-image
+	echo "build docker images"
+
+push-images: push-producer push-consumer
+	echo "docker images pushed to docker hub!"
 
 producer-app:
 	docker container run --rm --name contract-db \
