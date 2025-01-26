@@ -1,4 +1,4 @@
-.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer dc-network dc-producer dcu dcd
+.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer dc-network producer-image consumer-image dcu dcd deployment
 
 help: ## Show this help message with aligned shortcuts, descriptions, and commands
 	@awk 'BEGIN {FS = ":"; printf "\033[1m%-20s %-40s %s\033[0m\n", "Target", "Description", "Command"} \
@@ -46,7 +46,6 @@ cbc: cleanp buildp
 	
 database: # 2. start postgres container
 	docker container run --rm --name contract-db \
-		--network spring-contract \
 		-e POSTGRES_DB=contract \
 		-e POSTGRES_USER=postgres \
 		-e POSTGRES_PASSWORD=postgres \
@@ -74,12 +73,21 @@ stop-zipkin:
 
 ## Docker
 
-dc-producer:
-	docker image build -t baicham/spring-contract-producer:v1 ./producer
+producer-image:
+	docker image build -t baicham/spring-contract-producer:v2 ./producer
+
+consumer-image:
+	docker image build -t baicham/spring-contract-consumer:v2 ./consumer
+
+push-producer:
+	docker image push baicham/spring-contract-producer:v2
+
+push-consumer:
+	docker image push baicham/spring-contract-consumer:v2
 
 producer-app:
 	docker container run --rm --name contract-db \
-		--name spring-contract-producer \
+#		--name spring-contract-producer \
 		--network spring-contract \
 		-p 8081:8081 \
         -e DB_URL=jdbc:postgresql://contract-db:5432/contract \
@@ -95,3 +103,6 @@ dcu:
 
 dcd:
 	docker compose down -v
+	
+deployment:
+	./k8s/manual/deploy.sh
