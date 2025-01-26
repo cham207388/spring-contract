@@ -8,7 +8,7 @@ Contract.make {
 
     request {
         method HttpMethods.GET
-        url value(regex('/posts/[1-9][0-9]?/users/[1-9][0-9]?'))
+        url value(regex('/api/v1/posts/[1-9][0-9]?/users/[1-9][0-9]?'))
     }
 
     response {

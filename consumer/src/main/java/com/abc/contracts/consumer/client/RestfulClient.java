@@ -27,14 +27,16 @@ public class RestfulClient {
     @Value("${producer.port}")
     private int port;
 
-    private static final String HOST = "localhost";
+    @Getter
+    @Value("${producer.host}")
+    private String producerHost;
 
         public List<Post> getAllPosts() {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host(HOST)
+                .host(producerHost)
                 .port(port)
-                .path("/posts")
+                .path("/api/v1/posts")
                 .toUriString();
         return restClient.get()
                 .uri(URI.create(uri))
@@ -47,22 +49,22 @@ public class RestfulClient {
     public List<Post> getPostsByUserId(int userId) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host(HOST)
+                .host(producerHost)
                 .port(port)
-                .path("/posts/users")
+                .path("/api/v1/posts/users")
                 .queryParam("userId", userId)
                 .toUriString();
         return restClient.get()
                 .uri(URI.create(uri))
                 .accept(APPLICATION_JSON)
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<Post>>() {
+                .body(new ParameterizedTypeReference<>() {
                 });
     }
 
     public Post getPostByUserIdAndPostId(int id, int userId) {
         return restClient.get()
-                .uri("http://localhost:{PORT}/posts/{id}/users/{userId}", port, id, userId)
+                .uri("http://{host}:{PORT}/api/v1/posts/{id}/users/{userId}", producerHost, port, id, userId)
                 .accept(APPLICATION_JSON)
                 .retrieve()
                 .body(Post.class);
@@ -71,9 +73,9 @@ public class RestfulClient {
     public Post savePost(Post post) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host(HOST)
+                .host(producerHost)
                 .port(port)
-                .path("/posts")
+                .path("/api/v1/posts")
                 .toUriString();
         return restClient.post()
                 .uri(URI.create(uri))
@@ -87,9 +89,9 @@ public class RestfulClient {
     public List<Post> saveAllPost(List<Post> post) {
         String uri = UriComponentsBuilder.newInstance()
                 .scheme("http")
-                .host(HOST)
+                .host(producerHost)
                 .port(port)
-                .path("/posts/all")
+                .path("/api/v1/posts/all")
                 .toUriString();
         return restClient.post()
                 .uri(URI.create(uri))
@@ -97,7 +99,7 @@ public class RestfulClient {
                 .contentType(APPLICATION_JSON)
                 .body(post)
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<Post>>() {
+                .body(new ParameterizedTypeReference<>() {
                 });
     }
 }

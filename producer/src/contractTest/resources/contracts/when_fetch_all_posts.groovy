@@ -6,7 +6,7 @@ import org.springframework.cloud.contract.spec.internal.HttpMethods
 
 Contract.make {
     request {
-        urlPath '/posts'
+        urlPath '/api/v1/posts'
         method HttpMethods.GET
         headers {
             header(accept(), applicationJson())

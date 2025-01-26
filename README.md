@@ -101,3 +101,12 @@ This is the service that is calling the producer. It's also called the client.
   - WebClient
 - how to use prioritise in WireMock
   - [priority explain](https://stackoverflow.com/questions/50078978/how-to-use-priorities-in-wiremock)
+
+## Dockerized the application
+
+### Services
+
+- consumer
+- producer
+- postgres
+- zipkin
