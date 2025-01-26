@@ -28,7 +28,7 @@ public class UserService {
     public UserResponse getUser(Integer id) {
         UserInfo userInfo = userRepository.findById(id).orElse(null);
         if (userInfo == null) {
-            throw new RuntimeException("User not found");
+            return null;
         }
         UserResponse response = new UserResponse();
         response.setId(userInfo.getId());

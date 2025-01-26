@@ -36,7 +36,7 @@ public class RestfulClient {
                 .scheme("http")
                 .host(producerHost)
                 .port(port)
-                .path("/posts")
+                .path("/api/v1/posts")
                 .toUriString();
         return restClient.get()
                 .uri(URI.create(uri))
@@ -51,20 +51,20 @@ public class RestfulClient {
                 .scheme("http")
                 .host(producerHost)
                 .port(port)
-                .path("/posts/users")
+                .path("/api/v1/posts/users")
                 .queryParam("userId", userId)
                 .toUriString();
         return restClient.get()
                 .uri(URI.create(uri))
                 .accept(APPLICATION_JSON)
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<Post>>() {
+                .body(new ParameterizedTypeReference<>() {
                 });
     }
 
     public Post getPostByUserIdAndPostId(int id, int userId) {
         return restClient.get()
-                .uri("http://{host}:{PORT}/posts/{id}/users/{userId}", producerHost, port, id, userId)
+                .uri("http://{host}:{PORT}/api/v1/posts/{id}/users/{userId}", producerHost, port, id, userId)
                 .accept(APPLICATION_JSON)
                 .retrieve()
                 .body(Post.class);
@@ -75,7 +75,7 @@ public class RestfulClient {
                 .scheme("http")
                 .host(producerHost)
                 .port(port)
-                .path("/posts")
+                .path("/api/v1/posts")
                 .toUriString();
         return restClient.post()
                 .uri(URI.create(uri))
@@ -91,7 +91,7 @@ public class RestfulClient {
                 .scheme("http")
                 .host(producerHost)
                 .port(port)
-                .path("/posts/all")
+                .path("/api/v1/posts/all")
                 .toUriString();
         return restClient.post()
                 .uri(URI.create(uri))
@@ -99,7 +99,7 @@ public class RestfulClient {
                 .contentType(APPLICATION_JSON)
                 .body(post)
                 .retrieve()
-                .body(new ParameterizedTypeReference<List<Post>>() {
+                .body(new ParameterizedTypeReference<>() {
                 });
     }
 }

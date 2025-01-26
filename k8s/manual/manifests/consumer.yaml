@@ -15,7 +15,7 @@ spec:
         app: consumer
     spec:
       containers:
-        - image: baicham/spring-contract-consumer:v2
+        - image: baicham/spring-contract-consumer:v3
           name: spring-contract-consumer
           resources:
             requests:

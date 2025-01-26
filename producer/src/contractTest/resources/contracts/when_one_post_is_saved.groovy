@@ -7,7 +7,7 @@ Contract.make {
     description 'Should save a post and return the saved post with a Content-Type header'
 
     request {
-        urlPath '/posts'
+        urlPath '/api/v1/posts'
         method HttpMethods.POST
         headers {
             header(accept(), applicationJson())
