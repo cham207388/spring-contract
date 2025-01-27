@@ -2,7 +2,7 @@ package com.abc.contracts.consumer.services;
 
 import java.util.List;
 
-import com.abc.contracts.shared.domains.Post;
+import com.abc.contracts.consumer.domains.Post;
 import com.abc.contracts.consumer.messaging.PostMessagePublisher;
 import lombok.RequiredArgsConstructor;
 

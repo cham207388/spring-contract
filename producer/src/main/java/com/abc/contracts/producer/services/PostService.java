@@ -31,6 +31,11 @@ public class PostService {
         log.info("post response id: {}", response.getId());
         return response;
     }
+    public Post saveRabbit(Post post) {
+        Post response = postRepository.save(post);
+        log.info("post response id: {}", response.getId());
+        return response;
+    }
     
     public List<Post> savePosts(List<Post> posts) {
         return postRepository.saveAll(posts);

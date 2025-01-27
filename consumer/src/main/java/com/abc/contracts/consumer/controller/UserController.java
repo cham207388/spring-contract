@@ -2,7 +2,7 @@ package com.abc.contracts.consumer.controller;
 
 import java.util.List;
 
-import com.abc.contracts.shared.domains.Post;
+import com.abc.contracts.consumer.domains.Post;
 import com.abc.contracts.consumer.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

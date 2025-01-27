@@ -1,6 +1,6 @@
 package com.abc.contracts.consumer.messaging;
 
-import com.abc.contracts.shared.domains.Post;
+import com.abc.contracts.consumer.domains.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;

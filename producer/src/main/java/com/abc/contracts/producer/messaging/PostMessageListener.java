@@ -1,6 +1,6 @@
 package com.abc.contracts.producer.messaging;
 
-import com.abc.contracts.shared.domains.Post;
+import com.abc.contracts.producer.domains.Post;
 import com.abc.contracts.producer.services.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
