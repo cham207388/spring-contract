@@ -30,8 +30,7 @@ public class Post {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
-    public Post(int id, String title, String content, Integer userId) {
-        this.id = id;
+    public Post(String title, String content, Integer userId) {
         this.title = title;
         this.content = content;
         this.userId = userId;
