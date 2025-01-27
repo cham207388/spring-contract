@@ -2,11 +2,12 @@ package com.abc.contracts.consumer.services;
 
 import java.util.List;
 
+import com.abc.contracts.shared.domains.Post;
+import com.abc.contracts.consumer.messaging.PostMessagePublisher;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
-import com.abc.contracts.consumer.domains.Post;
 import com.abc.contracts.consumer.domains.UserInfo;
 import com.abc.contracts.consumer.dto.UserRequest;
 import com.abc.contracts.consumer.dto.UserResponse;
@@ -20,6 +21,7 @@ public class UserService {
 
     private final PostsService postsService;
     private final UserRepository userRepository;
+    private final PostMessagePublisher postMessagePublisher;
 
     public List<Post> getAllPost() {
         return postsService.getAllPosts();
@@ -47,6 +49,19 @@ public class UserService {
         List<Post> posts = request.getPosts();
         posts.forEach(post -> post.setUserId(userInfo.getId()));
         postsService.saveAllPost(posts);
+        return savedUser.getId();
+    }
+
+    public int saveUserRabbit(UserRequest request) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setFullName(request.getFullName());
+        userInfo.setEmail(request.getEmail());
+        UserInfo savedUser = userRepository.save(userInfo);
+        List<Post> posts = request.getPosts();
+        posts.forEach(post -> {
+            post.setUserId(userInfo.getId());
+            postMessagePublisher.publishPostMessage(post);
+        });
         return savedUser.getId();
     }
 }

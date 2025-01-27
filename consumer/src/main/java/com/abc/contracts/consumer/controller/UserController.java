@@ -2,13 +2,13 @@ package com.abc.contracts.consumer.controller;
 
 import java.util.List;
 
+import com.abc.contracts.shared.domains.Post;
 import com.abc.contracts.consumer.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.abc.contracts.consumer.domains.Post;
 import com.abc.contracts.consumer.dto.UserRequest;
 import com.abc.contracts.consumer.dto.UserResponse;
 
@@ -33,5 +33,10 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Integer> saveUser(@RequestBody UserRequest userInfo) {
         return new ResponseEntity<>(userService.saveUser(userInfo), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/rabbit")
+    public ResponseEntity<Integer> saveUserRabbit(@RequestBody UserRequest userInfo) {
+        return new ResponseEntity<>(userService.saveUserRabbit(userInfo), HttpStatus.CREATED);
     }
 }
