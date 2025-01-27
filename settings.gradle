@@ -2,7 +2,8 @@ rootProject.name = 'spring-contract'
 
 include ':consumer'
 include ':producer'
+include ':shared'
 
 project(':producer').projectDir = file('producer')
 project(':consumer').projectDir = file('consumer')
-//project(':shared').projectDir = file('shared')
+project(':shared').projectDir = file('shared')
