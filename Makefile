@@ -74,13 +74,13 @@ stop-zipkin:
 ## Docker
 
 producer-image:
-	docker image build -t baicham/spring-contract-producer:v4 ./producer
+	docker image build -t baicham/spring-contract-producer:v7 ./producer
 
 consumer-image:
 	docker image build -t baicham/spring-contract-consumer:v4 ./consumer
 
 push-producer:
-	docker image push baicham/spring-contract-producer:v4
+	docker image push baicham/spring-contract-producer:v7
 
 push-consumer:
 	docker image push baicham/spring-contract-consumer:v4
