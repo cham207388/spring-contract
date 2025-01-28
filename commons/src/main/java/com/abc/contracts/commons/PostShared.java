@@ -1,4 +1,4 @@
-package com.abc.contracts.shared.model;
+package com.abc.contracts.commons;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post {
+public class PostShared {
     private Integer id;
     private String title;
     private String content;

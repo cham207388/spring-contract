@@ -50,6 +50,10 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+    // validation
+    implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final' // or the latest compatible version
+    implementation 'org.glassfish:jakarta.el:4.0.2'
 }
 
 dependencyManagement {
