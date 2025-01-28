@@ -1,15 +1,11 @@
-package com.abc.contracts.consumer.messaging;
+package com.abc.contracts.producer.messaging;
 
-import com.abc.contracts.consumer.domains.Post;
+import com.abc.contracts.producer.domains.Post;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.amqp.support.converter.SimpleMessageConverter;
 import org.springframework.stereotype.Service;
 
 

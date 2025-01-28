@@ -34,9 +34,4 @@ public class UserController {
     public ResponseEntity<Integer> saveUser(@RequestBody UserRequest userInfo) {
         return new ResponseEntity<>(userService.saveUser(userInfo), HttpStatus.CREATED);
     }
-
-    @PostMapping("/rabbit")
-    public ResponseEntity<Integer> saveUserRabbit(@RequestBody UserRequest userInfo) {
-        return new ResponseEntity<>(userService.saveUserRabbit(userInfo), HttpStatus.CREATED);
-    }
 }
