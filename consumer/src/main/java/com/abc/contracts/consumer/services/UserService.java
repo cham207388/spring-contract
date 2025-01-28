@@ -45,8 +45,10 @@ public class UserService {
         userInfo.setEmail(request.getEmail());
         UserInfo savedUser = userRepository.save(userInfo);
         List<Post> posts = request.getPosts();
-        posts.forEach(post -> post.setUserId(userInfo.getId()));
-        postsService.saveAllPost(posts);
+        posts.forEach(post -> {
+            post.setUserId(userInfo.getId());
+            postsService.savePost(post);
+        });
         return savedUser.getId();
     }
 }

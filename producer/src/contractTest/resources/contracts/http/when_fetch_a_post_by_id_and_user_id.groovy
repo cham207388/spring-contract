@@ -1,4 +1,4 @@
-package contracts
+package contracts.http
 
 import org.springframework.cloud.contract.spec.Contract
 import org.springframework.cloud.contract.spec.internal.HttpMethods

@@ -20,17 +20,17 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ContextConfiguration(classes = TestConfig.class)
-public abstract class BaseContractTest {
+public abstract class HttpBase {
 
     private final PostController postController;
     private final PostService postService;
 
-    public BaseContractTest(PostController postController, PostService postService) {
+    public HttpBase(PostController postController, PostService postService) {
         this.postController = postController;
         this.postService = postService;
     }
 
-    public BaseContractTest() {
+    public HttpBase() {
         this.postService = Mockito.mock(PostService.class); // Mock PostService
         this.postController = new PostController(postService); // Use mocked PostService
     }

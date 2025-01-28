@@ -1,12 +1,16 @@
-/* groovylint-disable DuplicateStringLiteral */
-package contracts
+package contracts.http
 
 import org.springframework.cloud.contract.spec.Contract
 import org.springframework.cloud.contract.spec.internal.HttpMethods
 
 Contract.make {
     request {
-        urlPath '/api/v1/posts'
+        description 'Should return all posts by user with id = 1'
+        urlPath('/api/v1/posts/users') {
+            queryParameters {
+                parameter('userId', regex('[1-9][0-9]?'))
+            }
+        }
         method HttpMethods.GET
         headers {
             header(accept(), applicationJson())
@@ -31,15 +35,9 @@ Contract.make {
                         content: 'Spring Cloud Contract',
                         userId : 1,
                         createdAt: anyDateTime()
-                ],
-                [
-                        id     : 3,
-                        title  : 'Test',
-                        content: 'Contract Testing',
-                        userId : 2,
-                        createdAt: anyDateTime()
                 ]
+
         ])
     }
-    priority(2) // the first contract to be added has the least priority: higher number
+    priority(1) // the first contract to be added has the least priority: higher number
 }
