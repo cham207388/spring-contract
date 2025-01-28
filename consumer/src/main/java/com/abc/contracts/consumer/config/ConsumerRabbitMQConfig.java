@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Getter
 @Configuration
-public class RabbitMQConfig {
+public class ConsumerRabbitMQConfig {
 
     @Value("${rabbitmq.post.queue}")
     private String postQueue;
