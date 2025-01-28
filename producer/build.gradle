@@ -103,8 +103,8 @@ contracts {
     packageWithBaseClasses = 'com.abc.contracts.producer'
     testMode = 'MockMvc' // For HTTP contracts
     baseClassMappings {
-        baseClassMapping('com.abc.contracts.producer/.*', 'com.abc.contracts.producer.BaseContractTest') // For HTTP
-        baseClassMapping('com.abc.contracts.producer/.*', 'com.abc.contracts.producer.BaseMessagingContractTest') // For RabbitMQ
+        baseClassMapping('http/.*', 'com.abc.contracts.producer.HttpBase') // For HTTP
+        baseClassMapping('messaging/.*', 'com.abc.contracts.producer.MessagingBase') // For RabbitMQ
     }
 }
 
