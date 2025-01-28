@@ -15,6 +15,7 @@ java {
     }
 }
 
+
 // def gitCommitHash = 'git rev-parse --short HEAD'.execute().text.trim()
 def stubVersion = '0.0.1-RELEASE'
 
