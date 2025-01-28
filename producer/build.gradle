@@ -85,7 +85,7 @@ dependencies {
 
     implementation 'org.modelmapper:modelmapper:3.2.2'
 
-//    implementation project(':commons')
+    testImplementation 'org.testcontainers:rabbitmq:1.19.0'
 }
 
 dependencyManagement {

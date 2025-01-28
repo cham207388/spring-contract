@@ -1,6 +1,6 @@
 package com.abc.contracts.producer;
 
-import com.abc.contracts.producer.config.TestConfig;
+import com.abc.contracts.producer.config.HttpTestConfig;
 import com.abc.contracts.producer.controllers.PostController;
 import com.abc.contracts.producer.domains.Post;
 import com.abc.contracts.producer.services.PostService;
@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = HttpTestConfig.class)
 public abstract class HttpBase {
 
     private final PostController postController;
