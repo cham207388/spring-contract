@@ -95,8 +95,18 @@ dependencyManagement {
     }
 }
 
+//contracts {
+//    baseClassForTests = 'com.abc.contracts.producer.BaseHttpTest'
+//}
+
 contracts {
-    baseClassForTests = 'com.abc.contracts.producer.BaseHttpTest'
+    testFramework = 'JUnit5'
+    packageWithBaseClasses = 'com.abc.contracts.producer'
+
+    baseClassMappings {
+        baseClassMapping('.*http.*', 'com.abc.contracts.producer.BaseHttpTest') // HTTP tests
+        baseClassMapping('.*jms.*', 'com.abc.contracts.producer.BaseJmsTest')   // JMS tests
+    }
 }
 
 tasks.named('contractTest') {
