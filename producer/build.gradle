@@ -80,19 +80,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-activemq'
     implementation 'org.springframework.cloud:spring-cloud-stream-test-support'
 
-    // Embedded Artemis for testing
-//    testImplementation 'org.apache.activemq:artemis-jms-server:2.30.0'
-//    testImplementation 'org.apache.activemq:artemis-jakarta-client:2.30.0'
-//
-//    testImplementation 'org.testcontainers:testcontainers:1.19.0'
-//    testImplementation 'org.testcontainers:junit-jupiter:1.19.0'
-//
-//    testImplementation "org.apache.activemq.tooling:activemq-junit:${activemqJunitVersion}"
-//    testImplementation "org.apache.activemq:activemq-pool:${activemqJunitVersion}"
-//    testImplementation "org.junit.jupiter:junit-jupiter:${activemqJunitVersion}"
-//    testImplementation "org.apache.activemq:activemq-broker:${activemqJunitVersion}"
-//    implementation 'org.apache.activemq:activemq-client:${activemqJunitVersion}'
-
     // 🔹 Use Artemis instead of ActiveMQ Classic
     implementation 'org.springframework.boot:spring-boot-starter-artemis' // ✅ Spring Boot Artemis Starter
     testImplementation 'org.apache.activemq:artemis-junit-5:2.32.0'

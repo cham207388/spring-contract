@@ -2,6 +2,8 @@ package com.abc.contracts.producer.config;
 
 import com.abc.contracts.producer.jms.JmsMessageVerifierReceiver;
 import com.abc.contracts.producer.jms.JmsMessageVerifierSender;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.jms.ConnectionFactory;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.cloud.contract.verifier.messaging.internal.ContractVerifierMessaging;
@@ -9,6 +11,8 @@ import org.springframework.cloud.contract.verifier.messaging.internal.ContractVe
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
@@ -25,18 +29,23 @@ public class JmsTestConfig {
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
-        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
-        jmsTemplate.setMessageConverter(jacksonJmsMessageConverter()); // Set JSON converter
-        return jmsTemplate;
+    public MappingJackson2MessageConverter jacksonJmsMessageConverter() {
+        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+        converter.setTargetType(MessageType.TEXT);
+        converter.setTypeIdPropertyName("_type");
+
+        // 🔥 FIX: Register JavaTimeModule so Jackson understands LocalDateTime
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        converter.setObjectMapper(objectMapper); // <-- Important!
+        return converter;
     }
 
     @Bean
-    public MappingJackson2MessageConverter jacksonJmsMessageConverter() {
-        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-        converter.setTargetType(MessageType.TEXT); // Ensure messages are sent as JSON text
-        converter.setTypeIdPropertyName("_type");
-        return converter;
+    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
+        jmsTemplate.setMessageConverter(jacksonJmsMessageConverter()); // 🚀 Apply JSON converter
+        return jmsTemplate;
     }
 
     @Bean
@@ -50,14 +59,26 @@ public class JmsTestConfig {
     }
 
     @Bean
-    public ContractVerifierMessaging<?> contractVerifierMessaging(
-            JmsMessageVerifierSender sender,
-            JmsMessageVerifierReceiver receiver) {
-        return new ContractVerifierMessaging<>(sender, receiver);
+    public ContractVerifierObjectMapper contractVerifierObjectMapper() {
+        return new ContractVerifierObjectMapper();
     }
 
     @Bean
-    public ContractVerifierObjectMapper contractVerifierObjectMapper() {
-        return new ContractVerifierObjectMapper();
+    public ContractVerifierMessaging<?> contractVerifierMessaging(JmsTemplate jmsTemplate) {
+        ContractVerifierMessaging<?> messaging = new ContractVerifierMessaging<>(
+                new JmsMessageVerifierSender(jmsTemplate),
+                new JmsMessageVerifierReceiver(jmsTemplate)
+        );
+
+        messaging.receive("post-queue"); // 🔥 Force SCC to listen to the queue
+        return messaging;
+    }
+
+    @Bean
+    public JmsListenerContainerFactory<?> jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setConcurrency("1-1"); // Allows one concurrent consumer
+        return factory;
     }
 }
