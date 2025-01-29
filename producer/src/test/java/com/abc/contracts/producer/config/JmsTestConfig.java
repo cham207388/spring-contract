@@ -2,27 +2,28 @@ package com.abc.contracts.producer.config;
 
 import com.abc.contracts.producer.jms.JmsMessageVerifierReceiver;
 import com.abc.contracts.producer.jms.JmsMessageVerifierSender;
-import org.apache.activemq.ActiveMQConnectionFactory;
+import jakarta.jms.ConnectionFactory;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.cloud.contract.verifier.messaging.internal.ContractVerifierMessaging;
 import org.springframework.cloud.contract.verifier.messaging.internal.ContractVerifierObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
-
-
 
 @EnableJms
 @Configuration
 public class JmsTestConfig {
 
+    // Use in-memory Artemis broker instead of ActiveMQ Classic
     @Bean
-    public ActiveMQConnectionFactory connectionFactory() {
-        return new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
+    public ConnectionFactory connectionFactory() {
+        return new CachingConnectionFactory(new ActiveMQConnectionFactory("vm://0"));
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(ActiveMQConnectionFactory connectionFactory) {
+    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
         return new JmsTemplate(connectionFactory);
     }
 
@@ -47,14 +48,4 @@ public class JmsTestConfig {
     public ContractVerifierObjectMapper contractVerifierObjectMapper() {
         return new ContractVerifierObjectMapper();
     }
-
-//    @Bean
-//    public BrokerService embeddedActiveMQBroker() throws Exception {
-//        BrokerService broker = new BrokerService();
-//        broker.setPersistent(false);
-//        broker.setUseJmx(false);
-//        broker.addConnector("vm://localhost"); // Embedded ActiveMQ broker
-//        broker.start();
-//        return broker;
-//    }
 }
