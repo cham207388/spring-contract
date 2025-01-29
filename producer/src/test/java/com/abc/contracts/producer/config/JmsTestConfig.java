@@ -78,7 +78,8 @@ public class JmsTestConfig {
     public JmsListenerContainerFactory<?> jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
-        factory.setConcurrency("1-1"); // Allows one concurrent consumer
+        factory.setConcurrency("1-1");
+        factory.setMessageConverter(jacksonJmsMessageConverter());
         return factory;
     }
 }
