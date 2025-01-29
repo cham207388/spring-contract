@@ -39,7 +39,7 @@ publishing {
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/release' }
+//    maven { url 'https://repo.spring.io/release' }
 }
 
 ext {
@@ -73,6 +73,20 @@ dependencies {
     // serializer
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
 
+    // Active mq from here on Spring Cloud Contract dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-activemq'
+    implementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+
+//
+//    // Testing dependencies
+//    testImplementation 'org.springframework.jms:spring-jms-test:6.1.1'
+//
+//    // Mock server for contract testing
+//    testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock:4.2.0'
+//    testImplementation 'org.springframework.jms:spring-jms-test:6.1.1'
+//
+//    // Mock server for contract testing
+//    testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock:4.2.0'
 }
 
 dependencyManagement {
@@ -82,7 +96,7 @@ dependencyManagement {
 }
 
 contracts {
-    baseClassForTests = 'com.abc.contracts.producer.BaseContractTest'
+    baseClassForTests = 'com.abc.contracts.producer.BaseHttpTest'
 }
 
 tasks.named('contractTest') {
