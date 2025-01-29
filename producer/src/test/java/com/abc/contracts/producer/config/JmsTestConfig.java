@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
+import org.springframework.jms.support.converter.MessageType;
 
 @EnableJms
 @Configuration
@@ -24,7 +26,17 @@ public class JmsTestConfig {
 
     @Bean
     public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
-        return new JmsTemplate(connectionFactory);
+        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
+        jmsTemplate.setMessageConverter(jacksonJmsMessageConverter()); // Set JSON converter
+        return jmsTemplate;
+    }
+
+    @Bean
+    public MappingJackson2MessageConverter jacksonJmsMessageConverter() {
+        MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
+        converter.setTargetType(MessageType.TEXT); // Ensure messages are sent as JSON text
+        converter.setTypeIdPropertyName("_type");
+        return converter;
     }
 
     @Bean
