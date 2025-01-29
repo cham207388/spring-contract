@@ -50,7 +50,7 @@ public abstract class BaseJmsTest {
             jmsTemplate.send("post-queue", messageCreator);
 
             // ✅ Wait before SCC reads the message
-            Thread.sleep(2000);
+            Thread.sleep(5000);
 
             // 🔥 Manually receive message before SCC runs
             Message receivedMessage = jmsTemplate.receive("post-queue");
