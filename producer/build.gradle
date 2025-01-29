@@ -76,6 +76,10 @@ dependencies {
     // Active mq from here on Spring Cloud Contract dependencies
     implementation 'org.springframework.boot:spring-boot-starter-activemq'
     implementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+//    implementation 'org.apache.activemq:activemq-broker:5.18.1'
+//    implementation 'org.apache.activemq:activemq-client:5.18.1'
+//    implementation 'org.springframework.cloud:spring-cloud-contract-verifier-messaging-jms'
+//    implementation 'jms:jms:1.1'
 
 //
 //    // Testing dependencies

@@ -15,7 +15,7 @@ public class PostMessagePublisher {
     private final JmsTemplate jmsTemplate;
     private final ObjectMapper objectMapper;
 
-    public void publishPostMessage(Post post) {
+    public void publishPostString(Post post) {
         try {
             String jsonMessage = objectMapper.writeValueAsString(post);
             log.info("Published post: {}", jsonMessage);
@@ -23,5 +23,10 @@ public class PostMessagePublisher {
         } catch (Exception e) {
             log.error("Error publishing post: {}", post);
         }
+    }
+
+    public void publishPost(Post post) {
+        log.info("Published post object: {}", post);
+        jmsTemplate.convertAndSend("post-queue", post);
     }
 }
