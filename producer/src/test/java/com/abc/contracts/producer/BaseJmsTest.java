@@ -14,7 +14,7 @@ public abstract class BaseJmsTest {
     protected JmsTemplate jmsTemplate;
 
     // This method will be called by the contract test
-    protected void send() {
+    protected void triggerPostMessage() {
         jmsTemplate.convertAndSend("seat-reservation-queue",
                 "{\"id\":1,\"title\":\"string\",\"content\":\"string\",\"userId\":1,\"createdAt\":\"2025-01-28T21:58:21\"}");
     }
