@@ -15,7 +15,7 @@ RUN ./gradlew dependencies --no-daemon
 COPY src /app/src
 
 # Build the Spring Boot application
-RUN ./gradlew build --no-daemon -x test -x contractTest -x generateContractTests -x generateStubs
+RUN ./gradlew build --no-daemon -x test -x contractTest -x generateContractTests -x generateClientStubs
 
 # Second stage: runtime image
 FROM eclipse-temurin:21-jre-alpine
