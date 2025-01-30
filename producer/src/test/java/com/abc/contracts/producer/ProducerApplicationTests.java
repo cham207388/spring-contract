@@ -12,7 +12,7 @@ class ProducerApplicationTests {
 
     @Test
     void contextLoads() {
-        // TODO document why this method is empty
+        System.out.println("Hello World");
     }
 
 }
