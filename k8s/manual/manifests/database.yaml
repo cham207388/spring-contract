@@ -15,25 +15,31 @@ spec:
         app: database
     spec:
       containers:
-        - image: postgres
-          name: contract-db
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "128Mi"
-            limits:
-              cpu: "200m"
-              memory: "256Mi"
-          env:
-            - name: POSTGRES_DB
-              value: "contract"
-            - name: POSTGRES_PASSWORD
-              value: "postgres"
-            - name: POSTGRES_USER
-              value: "postgres"
-          ports:
-            - containerPort: 5432
-
+      - image: postgres
+        name: contract-db
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        volumeMount:
+        - name: mypod
+          mountPath: "/var/lib/postgresql/data"
+        env:
+        - name: POSTGRES_DB
+          value: "contract"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_USER
+          value: "postgres"
+        ports:
+        - containerPort: 5432
+      volumes:
+      - name: mypod
+        persistentVolumeClaim:
+          claimName: claim-volume
 ---
 apiVersion: v1
 kind: Service
@@ -43,6 +49,18 @@ spec:
   selector:
     app: database
   ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: claim-volume
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 128Mi
+  hostPath:
+    path: /tmp/contract-db

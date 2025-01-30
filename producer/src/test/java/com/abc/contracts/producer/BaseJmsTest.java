@@ -15,7 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ContextConfiguration(classes = {JmsTestConfig.class, EmbeddedArtemisTestConfig.class})
 @AutoConfigureMessageVerifier
 @Testcontainers
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class BaseJmsTest {
 
     @Autowired
