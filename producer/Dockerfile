@@ -36,4 +36,4 @@ EXPOSE 8081
 #USER producer
 
 # Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=local"]
+ENTRYPOINT ["sh", "-c", "java", "-jar app.jar --spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

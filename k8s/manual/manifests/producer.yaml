@@ -15,7 +15,7 @@ spec:
         app: producer
     spec:
       containers:
-      - image: baicham/spring-contract-producer:swagger3
+      - image: baicham/spring-contract-producer:swagger4
         name: spring-contract-producer
         resources:
           requests:
