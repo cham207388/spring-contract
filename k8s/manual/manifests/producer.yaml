@@ -14,8 +14,12 @@ spec:
       labels:
         app: producer
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
-      - image: baicham/spring-contract-producer:swagger4
+      - image: baicham/spring-contract-producer:swagger1.1
         name: spring-contract-producer
         resources:
           requests:
@@ -41,6 +45,10 @@ spec:
           value: "admin"
         - name: SPRING_PROFILES_ACTIVE
           value: "kubernetes"
+        - name: SWAGGER_API_DOCS_PATH
+          value: "/producer/swagger-ui"
+        - name: SWAGGER_UI_PATH
+          value: "/producer/v3/api-docs"
         ports:
         - containerPort: 8081
 ---

@@ -20,20 +20,21 @@ RUN ./gradlew build --no-daemon -x test -x contractTest -x generateContractTests
 # Second stage: runtime image
 FROM eclipse-temurin:21-jre-alpine
 
+RUN addgroup -S -g 1000 producer && \
+    adduser -S -u 1000 -G producer producer && \
+    mkdir -p /app && \
+    chown producer:producer /app
+
+USER producer
+
 # Set working directory
 WORKDIR /app
 
 # Copy the Spring Boot JAR file from the build stage
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# RUN groupadd -g 1000 producer && \
-#    useradd -u 1000  -g producer -m producer && \
-#    chown -R 755 /app
-
 # Expose the application port
 EXPOSE 8081
 
-#USER producer
-
 # Run the Spring Boot application
-ENTRYPOINT ["sh", "-c", "java", "-jar app.jar --spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

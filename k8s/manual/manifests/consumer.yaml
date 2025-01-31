@@ -14,8 +14,12 @@ spec:
       labels:
         app: consumer
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
-      - image: baicham/spring-contract-consumer:v4
+      - image: baicham/spring-contract-consumer:swagger1.1
         name: spring-contract-consumer
         resources:
           requests:
