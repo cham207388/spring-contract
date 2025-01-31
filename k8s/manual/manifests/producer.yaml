@@ -19,7 +19,7 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-      - image: baicham/spring-contract-producer:swagger-config1.1
+      - image: baicham/spring-contract-producer:swagger-config1.2
         name: spring-contract-producer
         resources:
           requests:
@@ -43,9 +43,11 @@ spec:
           value: "admin"
         - name: ACTIVEMQ_PASSWORD
           value: "admin"
-        - name: SWAGGER_UI_CONFIG_URL
+        - name: SWAGGER_CONFIG_URL
           value: "/producer/v3/api-docs/swagger-config"
-        - name: SWAGGER_UI_REDIRECT_URL
+        - name: SWAGGER_API_DOCS_URL
+          value: "/producer/v3/api-docs"
+        - name: SWAGGER_OAUTH2_REDIRECT_URL
           value: "/producer/swagger-ui/oauth2-redirect.html"
         ports:
         - containerPort: 8081
