@@ -1,6 +1,5 @@
 package com.abc.contracts.producer;
 
-import com.abc.contracts.producer.config.EmbeddedArtemisInitializer;
 import com.abc.contracts.producer.config.EmbeddedArtemisTestConfig;
 import com.abc.contracts.producer.config.JmsTestConfig;
 import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
@@ -27,21 +26,11 @@ public abstract class BaseJmsTest {
     @Autowired
     protected JmsTemplate jmsTemplate;
 
-//    @BeforeAll
-//    public static void startBroker() throws Exception {
-//        EmbeddedActiveMQ embeddedActiveMQ = new EmbeddedArtemisTestConfig().embeddedActiveMQ();
-//        System.out.println("Broker started successfully!");
-//        embeddedActiveMQ.start();
-//    }
-
     @BeforeAll
-    public static void startBroker() {
-        // The broker is already started by EmbeddedArtemisInitializer
-    }
-
-    @AfterAll
-    public static void stopBroker() {
-        EmbeddedArtemisInitializer.stopBroker();
+    public static void startBroker() throws Exception {
+        EmbeddedActiveMQ embeddedActiveMQ = new EmbeddedArtemisTestConfig().embeddedActiveMQ();
+        System.out.println("Broker started successfully!");
+        embeddedActiveMQ.start();
     }
 
     protected void triggerPostMessage() {
