@@ -19,7 +19,7 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-      - image: baicham/spring-contract-producer:swagger1.1
+      - image: baicham/spring-contract-producer:swagger1.2
         name: spring-contract-producer
         resources:
           requests:
@@ -27,7 +27,7 @@ spec:
             memory: "128Mi"
           limits:
             cpu: "200m"
-            memory: "256Mi"
+            memory: "512Mi"
         env:
         - name: DB_URL
           value: "jdbc:postgresql://contract-db:5432/contract"
@@ -43,12 +43,10 @@ spec:
           value: "admin"
         - name: ACTIVEMQ_PASSWORD
           value: "admin"
-        - name: SPRING_PROFILES_ACTIVE
-          value: "kubernetes"
-        - name: SWAGGER_API_DOCS_PATH
-          value: "/producer/swagger-ui"
-        - name: SWAGGER_UI_PATH
-          value: "/producer/v3/api-docs"
+        # - name: SWAGGER_API_DOCS_PATH
+        #   value: "/producer/swagger-ui"
+        # - name: SWAGGER_UI_PATH
+        #   value: "/producer/v3/api-docs"
         ports:
         - containerPort: 8081
 ---
