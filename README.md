@@ -107,3 +107,8 @@ This is the service that is calling the producer. It's also called the client.
 - postgres
 - zipkin
 - activemq
+
+## Makefile
+
+- with dynamic values:
+  - ```make dc-producer version=v1```

@@ -15,7 +15,7 @@ spec:
         app: producer
     spec:
       containers:
-      - image: baicham/spring-contract-producer:v4
+      - image: baicham/spring-contract-producer:swagger3
         name: spring-contract-producer
         resources:
           requests:
@@ -39,6 +39,8 @@ spec:
           value: "admin"
         - name: ACTIVEMQ_PASSWORD
           value: "admin"
+        - name: SPRING_PROFILES_ACTIVE
+          value: "kubernetes"
         ports:
         - containerPort: 8081
 ---

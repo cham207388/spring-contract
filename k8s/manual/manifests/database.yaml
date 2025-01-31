@@ -39,7 +39,7 @@ spec:
       volumes:
       - name: mypod
         persistentVolumeClaim:
-          claimName: claim-volume
+          claimName: pvc-db
 ---
 apiVersion: v1
 kind: Service
@@ -54,13 +54,12 @@ spec:
     targetPort: 5432
 ---
 apiVersion: v1
-kind: PersistentVolume
+kind: PersistentVolumeClaim
 metadata:
-  name: claim-volume
+  name: pvc-db
 spec:
   accessModes:
-  - ReadWriteOnce
-  capacity:
-    storage: 128Mi
-  hostPath:
-    path: /tmp/contract-db
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Mi

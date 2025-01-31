@@ -1,5 +1,7 @@
 .PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer dc-network producer-image build-images push-images consumer-image dcu dcd deployment
 
+version ?= latest
+
 help: ## Show this help message with aligned shortcuts, descriptions, and commands
 	@awk 'BEGIN {FS = ":"; printf "\033[1m%-20s %-40s %s\033[0m\n", "Target", "Description", "Command"} \
  /^[a-zA-Z_-]+:/ { \
@@ -74,16 +76,16 @@ stop-zipkin:
 ## Docker
 
 producer-image:
-	docker image build -t baicham/spring-contract-producer:v4 ./producer
+	docker image build -t baicham/spring-contract-producer:$(version) ./producer
 
 consumer-image:
-	docker image build -t baicham/spring-contract-consumer:v4 ./consumer
+	docker image build -t baicham/spring-contract-consumer:$(version) ./consumer
 
 push-producer:
-	docker image push baicham/spring-contract-producer:v4
+	docker image push baicham/spring-contract-producer:$(version)
 
 push-consumer:
-	docker image push baicham/spring-contract-consumer:v4
+	docker image push baicham/spring-contract-consumer:$(version)
 
 build-images: producer-image consumer-image
 	echo "build docker images"
@@ -112,3 +114,9 @@ dcd:
 	
 deployment:
 	./k8s/manual/deploy.sh
+
+dc-producer: producer-image push-producer
+	echo 'build and push producer image to docker hub'
+
+dc-consumer: consumer-image push-consumer
+	echo 'build and push consumer image to docker hub'
