@@ -22,11 +22,11 @@ Contract.make {
                 createdAt: $(regex("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}"))
         )
 
-        headers {
-//            header("_type", "com.abc.contracts.producer.domains.Post")  // Helps SCC deserialize the message
+//        headers {
+////            header("_type", "com.abc.contracts.producer.domains.Post")  // Helps SCC deserialize the message
 //            header("JMSType", "application/json")  // Tells Artemis this is JSON
 //            header("Content_Type", "application/json")  // Workaround for Content-Type issue
-            messagingContentType(applicationJson())
-        }
+//            messagingContentType(applicationJson())
+//        }
     }
 }

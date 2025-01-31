@@ -4,6 +4,7 @@ import com.abc.contracts.producer.jms.JmsMessageVerifierReceiver;
 import com.abc.contracts.producer.jms.JmsMessageVerifierSender;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.annotation.PostConstruct;
 import jakarta.jms.ConnectionFactory;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.cloud.contract.verifier.messaging.internal.ContractVerifierMessaging;
@@ -80,5 +81,10 @@ public class JmsTestConfig {
         factory.setConcurrency("1-1");
         factory.setMessageConverter(jacksonJmsMessageConverter());
         return factory;
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("JmsTestConfig initialized successfully!");
     }
 }

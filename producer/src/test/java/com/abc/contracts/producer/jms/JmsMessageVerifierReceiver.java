@@ -8,6 +8,9 @@ import org.springframework.cloud.contract.verifier.messaging.MessageVerifierRece
 import org.springframework.jms.core.JmsTemplate;
 
 import javax.annotation.Nullable;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class JmsMessageVerifierReceiver implements MessageVerifierReceiver<Message> {
@@ -18,9 +21,6 @@ public class JmsMessageVerifierReceiver implements MessageVerifierReceiver<Messa
         this.jmsTemplate = jmsTemplate;
     }
 
-    /**
-     * Receive a message from the queue with a timeout.
-     */
     @Override
     public Message receive(String destination, long timeout, TimeUnit timeUnit, @Nullable YamlContract contract) {
         System.out.format("Receiving message from %s with timeout %s %s%n", destination, timeout, timeUnit);
@@ -28,25 +28,16 @@ public class JmsMessageVerifierReceiver implements MessageVerifierReceiver<Messa
         Message message = jmsTemplate.receive(destination);
         if (message != null) {
             System.out.println("Received message payload: " + extractPayload(message));
+            System.out.println("Received message headers: " + extractHeaders(message));
         } else {
             System.out.println("No message received from destination: " + destination);
         }
         return message;
     }
 
-    /**
-     * Receive a message from the queue (no timeout).
-     */
     @Override
     public Message receive(String destination) {
-        System.out.format("Receiving message from %s%n", destination);
-        Message message = jmsTemplate.receive(destination);
-        if (message != null) {
-            System.out.println("Received message payload: " + extractPayload(message));
-        } else {
-            System.out.println("No message received from destination: " + destination);
-        }
-        return message;
+        return receive(destination, 5, TimeUnit.SECONDS, null);
     }
 
     @Override
@@ -54,9 +45,6 @@ public class JmsMessageVerifierReceiver implements MessageVerifierReceiver<Messa
         return receive(destination);
     }
 
-    /**
-     * Extract the payload from the JMS message.
-     */
     public String extractPayload(Message message) {
         try {
             if (message instanceof TextMessage textMessage) {
@@ -66,5 +54,19 @@ public class JmsMessageVerifierReceiver implements MessageVerifierReceiver<Messa
             System.out.format("Failed to extract payload from JMS message %s", e);
         }
         return null;
+    }
+
+    public Map<String, Object> extractHeaders(Message message) {
+        Map<String, Object> headers = new HashMap<>();
+        try {
+            Enumeration<?> propertyNames = message.getPropertyNames();
+            while (propertyNames.hasMoreElements()) {
+                String key = (String) propertyNames.nextElement();
+                headers.put(key, message.getObjectProperty(key));
+            }
+        } catch (JMSException e) {
+            System.out.println("Failed to extract headers: " + e.getMessage());
+        }
+        return headers;
     }
 }

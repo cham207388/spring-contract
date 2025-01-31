@@ -23,9 +23,6 @@ public class JmsMessageVerifierSender implements MessageVerifierSender<Message> 
         jmsTemplate.convertAndSend(destination, message);
     }
 
-    /**
-     * Send a generic payload to a destination with headers.
-     */
     @Override
     public <T> void send(T payload, Map<String, Object> headers, String destination, YamlContract contract) {
         System.out.println("Sending message to '" + destination + "' with payload: " + payload);
