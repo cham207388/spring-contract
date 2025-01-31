@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
-import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
@@ -22,10 +21,10 @@ import org.springframework.jms.support.converter.MessageType;
 @Configuration
 public class JmsTestConfig {
 
-    // Use in-memory Artemis broker instead of ActiveMQ Classic
     @Bean
-    public ConnectionFactory connectionFactory() {
-        return new CachingConnectionFactory(new ActiveMQConnectionFactory("vm://0"));
+    public ActiveMQConnectionFactory connectionFactory() {
+        System.out.println("Creating ActiveMQConnectionFactory with URL: vm://0");
+        return new ActiveMQConnectionFactory("vm://0");
     }
 
     @Bean
@@ -34,17 +33,18 @@ public class JmsTestConfig {
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
 
-        // 🔥 FIX: Register JavaTimeModule so Jackson understands LocalDateTime
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        converter.setObjectMapper(objectMapper); // <-- Important!
+        converter.setObjectMapper(objectMapper);
         return converter;
     }
 
     @Bean
     public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+        System.out.println("Creating JmsTemplate with ConnectionFactory: " + connectionFactory);
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
-        jmsTemplate.setMessageConverter(jacksonJmsMessageConverter()); // 🚀 Apply JSON converter
+        jmsTemplate.setMessageConverter(jacksonJmsMessageConverter());
+        jmsTemplate.setReceiveTimeout(5000); // Set a reasonable timeout
         return jmsTemplate;
     }
 
@@ -64,13 +64,12 @@ public class JmsTestConfig {
     }
 
     @Bean
-    public ContractVerifierMessaging<?> contractVerifierMessaging(JmsTemplate jmsTemplate) {
-        ContractVerifierMessaging<?> messaging = new ContractVerifierMessaging<>(
-                new JmsMessageVerifierSender(jmsTemplate),
-                new JmsMessageVerifierReceiver(jmsTemplate)
-        );
-
-        messaging.receive("post-queue"); // 🔥 Force SCC to listen to the queue
+    public ContractVerifierMessaging<?> contractVerifierMessaging(
+            JmsMessageVerifierSender sender,
+            JmsMessageVerifierReceiver receiver) {
+        System.out.println("Creating ContractVerifierMessaging with sender and receiver");
+        ContractVerifierMessaging<?> messaging = new ContractVerifierMessaging<>(sender, receiver);
+        messaging.receive("post-queue"); // Force SCC to listen to the queue
         return messaging;
     }
 

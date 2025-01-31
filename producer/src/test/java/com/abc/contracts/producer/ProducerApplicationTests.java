@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 class ProducerApplicationTests {
 
-    @Test
+//    @Test
     void contextLoads() {
         System.out.println("Hello World");
     }

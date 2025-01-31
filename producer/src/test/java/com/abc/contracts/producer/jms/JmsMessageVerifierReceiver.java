@@ -23,9 +23,15 @@ public class JmsMessageVerifierReceiver implements MessageVerifierReceiver<Messa
      */
     @Override
     public Message receive(String destination, long timeout, TimeUnit timeUnit, @Nullable YamlContract contract) {
-        System.out.format("Receiving message from %s with timeout %s %s", destination, timeout, timeUnit);
+        System.out.format("Receiving message from %s with timeout %s %s%n", destination, timeout, timeUnit);
         jmsTemplate.setReceiveTimeout(timeUnit.toMillis(timeout));
-        return jmsTemplate.receive(destination);
+        Message message = jmsTemplate.receive(destination);
+        if (message != null) {
+            System.out.println("Received message payload: " + extractPayload(message));
+        } else {
+            System.out.println("No message received from destination: " + destination);
+        }
+        return message;
     }
 
     /**
@@ -33,14 +39,19 @@ public class JmsMessageVerifierReceiver implements MessageVerifierReceiver<Messa
      */
     @Override
     public Message receive(String destination) {
-        System.out.format("Receiving message from %s", destination);
-        return jmsTemplate.receive(destination);
+        System.out.format("Receiving message from %s%n", destination);
+        Message message = jmsTemplate.receive(destination);
+        if (message != null) {
+            System.out.println("Received message payload: " + extractPayload(message));
+        } else {
+            System.out.println("No message received from destination: " + destination);
+        }
+        return message;
     }
-
 
     @Override
     public Message receive(String destination, YamlContract contract) {
-        return null;
+        return receive(destination);
     }
 
     /**

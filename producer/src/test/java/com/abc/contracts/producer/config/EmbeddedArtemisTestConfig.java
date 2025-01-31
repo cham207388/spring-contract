@@ -9,16 +9,23 @@ import org.springframework.context.annotation.Bean;
 @TestConfiguration
 public class EmbeddedArtemisTestConfig {
 
-    @Bean
+    @Bean(initMethod = "start", destroyMethod = "stop")
     public EmbeddedActiveMQ embeddedActiveMQ() throws Exception {
-        EmbeddedActiveMQ embeddedActiveMQ = new EmbeddedActiveMQ();
+        System.out.println("Starting embedded Artemis broker...");
+
+        // Programmatic configuration
         Configuration config = new ConfigurationImpl()
                 .setPersistenceEnabled(false) // In-memory only
-                .setSecurityEnabled(false)
-                .addAcceptorConfiguration("invm", "vm://0");
+                .setSecurityEnabled(false)    // Disable security for simplicity
+                .addAcceptorConfiguration("invm", "vm://0"); // Use in-vm connector
 
+        // Create and configure the embedded broker
+        EmbeddedActiveMQ embeddedActiveMQ = new EmbeddedActiveMQ();
         embeddedActiveMQ.setConfiguration(config);
+
+        // Start the broker
         embeddedActiveMQ.start();
+        System.out.println("Embedded Artemis broker started successfully!");
         return embeddedActiveMQ;
     }
 }

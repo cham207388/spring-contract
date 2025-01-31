@@ -9,7 +9,7 @@ import com.abc.contracts.producer.controllers.PostController;
 import com.abc.contracts.producer.services.PostService;
 
 @Configuration
-public class TestConfig {
+public class HttpTestConfig {
 
   @Bean
   public PostService postService() {

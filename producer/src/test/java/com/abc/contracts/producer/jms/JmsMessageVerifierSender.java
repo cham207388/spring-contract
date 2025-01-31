@@ -28,7 +28,8 @@ public class JmsMessageVerifierSender implements MessageVerifierSender<Message> 
      */
     @Override
     public <T> void send(T payload, Map<String, Object> headers, String destination, YamlContract contract) {
-        System.out.println("Sending message to '{}' with payload: {}"+ destination + " " + payload);
+        System.out.println("Sending message to '" + destination + "' with payload: " + payload);
+        System.out.println("Headers: " + headers);
 
         jmsTemplate.send(destination, session -> {
             TextMessage textMessage = session.createTextMessage(payload.toString());
@@ -39,15 +40,14 @@ public class JmsMessageVerifierSender implements MessageVerifierSender<Message> 
 
     private void setHeaderSafely(Message message, String key, Object value) {
         try {
-            if (value instanceof String stringValue) {
-                message.setStringProperty(key, stringValue);
-            } else if (value instanceof Number numberValue) {
-                message.setObjectProperty(key, numberValue);
-            } else {
-                System.out.format("Unsupported header type for key %s %s", key, value);
+            switch (value) {
+                case String stringValue -> message.setStringProperty(key, stringValue);
+                case Number numberValue -> message.setObjectProperty(key, numberValue);
+                case Boolean booleanValue -> message.setBooleanProperty(key, booleanValue);
+                case null, default -> System.out.format("Unsupported header type for key %s: %s%n", key, value);
             }
         } catch (JMSException e) {
-            System.out.format("Failed to set header %s %s", key, e.getMessage());
+            System.out.format("Failed to set header %s: %s%n", key, e.getMessage());
         }
     }
 }
