@@ -12,19 +12,21 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(classes = {JmsTestConfig.class, EmbeddedArtemisTestConfig.class})
 @AutoConfigureMessageVerifier
-@Testcontainers
-@ActiveProfiles("test") // Activate the "test" profile
+@ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class BaseJmsTest {
 
     @Autowired
     protected JmsTemplate jmsTemplate;
+
+    private final CountDownLatch messageLatch = new CountDownLatch(1);
 
     @BeforeAll
     public static void startBroker() throws Exception {
@@ -36,39 +38,25 @@ public abstract class BaseJmsTest {
         EmbeddedArtemisTestConfig.stopBroker(); // Stop broker after tests
     }
 
-    protected void triggerPostMessage() {
-        try {
-            System.out.println("⏳ Waiting before sending message...");
-            Thread.sleep(2000);  // ✅ Delay before sending to let the broker stabilize
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        String payload = """
-        {
-            "id": 1,
-            "title": "string",
-            "content": "string",
-            "userId": 1,
-            "createdAt": "2025-01-28T21:58:21"
-        }
-    """;
-
-        System.out.println("📤 Sending message to 'post-queue': " + payload);
-
+    protected void triggerPostMessage() throws InterruptedException {
+        String payload = "{\"id\":1,\"title\":\"string\",\"content\":\"string\",\"userId\":1,\"createdAt\":\"2025-01-28T21:58:21\"}";
         jmsTemplate.convertAndSend("post-queue", payload, message -> {
             message.setStringProperty("_type", "com.abc.contracts.producer.domains.Post");
             message.setStringProperty("JMSType", "application/json");
             message.setStringProperty("Content_Type", "application/json");
-//            message.setStringProperty("Content-Type", "application/json");  // ✅ Ensure SCC recognizes it
             return message;
         });
+        System.out.println("Message sent to post-queue");
 
-        // Wait a bit after sending the message
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        // Signal that the message has been sent
+        messageLatch.countDown();
+    }
+
+    protected void waitForMessage() throws InterruptedException {
+        // Wait for the message to be sent (with a timeout to avoid hanging)
+        boolean messageSent = messageLatch.await(10, TimeUnit.SECONDS);
+        if (!messageSent) {
+            throw new RuntimeException("Timeout waiting for message to be sent");
         }
     }
 }

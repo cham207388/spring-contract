@@ -24,7 +24,6 @@ public class JmsTestConfig {
 
     @Bean
     public ActiveMQConnectionFactory connectionFactory() {
-        System.out.println("Creating ActiveMQConnectionFactory with URL: vm://0");
         return new ActiveMQConnectionFactory("vm://0");
     }
 
@@ -36,17 +35,16 @@ public class JmsTestConfig {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false); // Ignore non-serializable objects
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         converter.setObjectMapper(objectMapper);
         return converter;
     }
 
     @Bean
     public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
-        System.out.println("Creating JmsTemplate with ConnectionFactory: " + connectionFactory);
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
         jmsTemplate.setMessageConverter(jacksonJmsMessageConverter());
-        jmsTemplate.setReceiveTimeout(5000); // Set a reasonable timeout
+        jmsTemplate.setReceiveTimeout(5000);
         return jmsTemplate;
     }
 
@@ -69,10 +67,7 @@ public class JmsTestConfig {
     public ContractVerifierMessaging<?> contractVerifierMessaging(
             JmsMessageVerifierSender sender,
             JmsMessageVerifierReceiver receiver) {
-        System.out.println("Creating ContractVerifierMessaging with sender and receiver");
-        ContractVerifierMessaging<?> messaging = new ContractVerifierMessaging<>(sender, receiver);
-        messaging.receive("post-queue"); // Force SCC to listen to the queue
-        return messaging;
+        return new ContractVerifierMessaging<>(sender, receiver);
     }
 
     @Bean
