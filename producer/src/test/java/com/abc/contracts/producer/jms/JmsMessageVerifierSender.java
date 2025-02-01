@@ -1,5 +1,8 @@
 package com.abc.contracts.producer.jms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.TextMessage;
@@ -29,10 +32,21 @@ public class JmsMessageVerifierSender implements MessageVerifierSender<Message> 
         System.out.println("Headers: " + headers);
 
         jmsTemplate.send(destination, session -> {
-            TextMessage textMessage = session.createTextMessage(payload.toString());
+            TextMessage textMessage = session.createTextMessage(payload instanceof String ? (String) payload : convertToJson(payload));
             headers.forEach((key, value) -> setHeaderSafely(textMessage, key, value));
             return textMessage;
         });
+    }
+
+    private String convertToJson(Object object) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception e) {
+            throw new RuntimeException("❌ Failed to convert message to JSON", e);
+        }
     }
 
     private void setHeaderSafely(Message message, String key, Object value) {

@@ -5,6 +5,8 @@ import com.abc.contracts.producer.config.JmsTestConfig;
 import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.verifier.messaging.boot.AutoConfigureMessageVerifier;
@@ -21,6 +23,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @ActiveProfiles("test") // Activate the "test" profile
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BaseJmsTest {
 
     @Autowired
@@ -28,31 +31,36 @@ public abstract class BaseJmsTest {
 
     @BeforeAll
     public static void startBroker() throws Exception {
-        new EmbeddedArtemisTestConfig().embeddedActiveMQ(); // Start broker before tests
+        new EmbeddedArtemisTestConfig().embeddedActiveMQ();
     }
 
     @AfterAll
     public static void stopBroker() {
-        EmbeddedArtemisTestConfig.stopBroker(); // Stop broker after tests
+        EmbeddedArtemisTestConfig.stopBroker();
+    }
+
+    @BeforeEach  // ✅ Ensure message is sent before each test
+    public void setup() {
+        triggerPostMessage();
     }
 
     protected void triggerPostMessage() {
         try {
             System.out.println("⏳ Waiting before sending message...");
-            Thread.sleep(2000);  // ✅ Delay before sending to let the broker stabilize
+            Thread.sleep(2000); // ✅ Ensure broker is fully ready
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
         String payload = """
-        {
-            "id": 1,
-            "title": "string",
-            "content": "string",
-            "userId": 1,
-            "createdAt": "2025-01-28T21:58:21"
-        }
-    """;
+            {
+                "id": 1,
+                "title": "string",
+                "content": "string",
+                "userId": 1,
+                "createdAt": "2025-01-28T21:58:21"
+            }
+        """;
 
         System.out.println("📤 Sending message to 'post-queue': " + payload);
 
@@ -60,13 +68,11 @@ public abstract class BaseJmsTest {
             message.setStringProperty("_type", "com.abc.contracts.producer.domains.Post");
             message.setStringProperty("JMSType", "application/json");
             message.setStringProperty("Content_Type", "application/json");
-//            message.setStringProperty("Content-Type", "application/json");  // ✅ Ensure SCC recognizes it
             return message;
         });
 
-        // Wait a bit after sending the message
         try {
-            Thread.sleep(2000);
+            Thread.sleep(2000); // ✅ Allow broker to fully process before verification
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

@@ -9,29 +9,47 @@ import org.springframework.context.annotation.Bean;
 @TestConfiguration
 public class EmbeddedArtemisTestConfig {
 
+    private static EmbeddedActiveMQ broker = new EmbeddedActiveMQ();
+    private static volatile boolean isStarted = false; // Track broker status
+
     @Bean(initMethod = "start", destroyMethod = "stop")
     public EmbeddedActiveMQ embeddedActiveMQ() throws Exception {
-        System.out.println("Starting embedded Artemis broker...");
+        synchronized (EmbeddedArtemisTestConfig.class) {
+            if (isStarted) {
+                System.out.println("🚀 Broker already running! Skipping startup.");
+                return broker;
+            }
 
-        // Programmatic configuration
-        Configuration config = new ConfigurationImpl()
-                .setPersistenceEnabled(false) // In-memory only
-                .setSecurityEnabled(false)    // Disable security for simplicity
-                .addAcceptorConfiguration("invm", "vm://0?serverId=" + System.currentTimeMillis()); // Use a unique serverId
+            System.out.println("🚀 Starting embedded Artemis broker...");
 
-        // Create and configure the embedded broker
-        EmbeddedActiveMQ embeddedActiveMQ = new EmbeddedActiveMQ();
-        embeddedActiveMQ.setConfiguration(config);
+            Configuration config = new ConfigurationImpl()
+                    .setPersistenceEnabled(false)
+                    .setSecurityEnabled(false)
+                    .addAcceptorConfiguration("invm", "vm://0?serverId=1");
 
-        // Start the broker
-        embeddedActiveMQ.start();
-        System.out.println("Embedded Artemis broker started successfully!");
+            broker.setConfiguration(config);
+            broker.start();
 
-        // Log broker status
-        System.out.println("Broker is running: " + embeddedActiveMQ.getActiveMQServer().isStarted());
+            isStarted = true;
+            System.out.println("✅ Embedded Artemis broker started successfully!");
+            System.out.println("Broker is running: " + broker.getActiveMQServer().isStarted());
 
-        // Add a small delay to ensure the broker is fully initialized
-        Thread.sleep(3000); // 1 second delay
-        return embeddedActiveMQ;
+            return broker;
+        }
+    }
+
+    public static void stopBroker() {
+        synchronized (EmbeddedArtemisTestConfig.class) {
+            if (isStarted) {
+                try {
+                    System.out.println("🛑 Stopping embedded Artemis broker...");
+                    broker.stop();
+                    isStarted = false; // Reset flag
+                    System.out.println("✅ Embedded Artemis broker stopped successfully!");
+                } catch (Exception e) {
+                    System.err.println("❌ Error stopping Embedded Artemis broker: " + e.getMessage());
+                }
+            }
+        }
     }
 }

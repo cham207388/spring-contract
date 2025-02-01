@@ -26,7 +26,7 @@ Contract.make {
             header("_type", "com.abc.contracts.producer.domains.Post")  // Helps SCC deserialize the message
             header("JMSType", "application/json")  // Tells Artemis this is JSON
             header("Content_Type", "application/json")  // Workaround for Content-Type issue
-            messagingContentType(applicationJson())
+//            messagingContentType(applicationJson())
         }
     }
 }
