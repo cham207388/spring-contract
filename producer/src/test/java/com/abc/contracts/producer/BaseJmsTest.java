@@ -2,9 +2,9 @@ package com.abc.contracts.producer;
 
 import com.abc.contracts.producer.config.EmbeddedArtemisTestConfig;
 import com.abc.contracts.producer.config.JmsTestConfig;
-import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.verifier.messaging.boot.AutoConfigureMessageVerifier;
@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(classes = {JmsTestConfig.class, EmbeddedArtemisTestConfig.class})
@@ -26,16 +27,31 @@ public abstract class BaseJmsTest {
     @Autowired
     protected JmsTemplate jmsTemplate;
 
+    private static final AtomicBoolean isMessageSent = new AtomicBoolean(false);
     private final CountDownLatch messageLatch = new CountDownLatch(1);
 
     @BeforeAll
     public static void startBroker() throws Exception {
-        new EmbeddedArtemisTestConfig().embeddedActiveMQ(); // Start broker before tests
+        System.out.println("🚀 Starting embedded ActiveMQ broker...");
+        new EmbeddedArtemisTestConfig().embeddedActiveMQ();
+        Thread.sleep(3000); // Allow broker startup delay
     }
 
     @AfterAll
     public static void stopBroker() {
-        EmbeddedArtemisTestConfig.stopBroker(); // Stop broker after tests
+        System.out.println("🛑 Stopping embedded ActiveMQ broker...");
+        EmbeddedArtemisTestConfig.stopBroker();
+    }
+
+    @BeforeEach
+    public void setup() throws InterruptedException {
+        if (isMessageSent.compareAndSet(false, true)) {  // Ensures this block runs only once
+            System.out.println("📤 Sending test message before SCC runs verification");
+            waitForMessage();
+            System.out.println("✅ Test message sent successfully!");
+        } else {
+            System.out.println("🛑 Message already sent, skipping...");
+        }
     }
 
     protected void triggerPostMessage() throws InterruptedException {
@@ -46,17 +62,16 @@ public abstract class BaseJmsTest {
             message.setStringProperty("Content_Type", "application/json");
             return message;
         });
-        System.out.println("Message sent to post-queue");
+        System.out.println("✅ Message sent to 'post-queue'");
 
         // Signal that the message has been sent
         messageLatch.countDown();
     }
 
     protected void waitForMessage() throws InterruptedException {
-        // Wait for the message to be sent (with a timeout to avoid hanging)
         boolean messageSent = messageLatch.await(10, TimeUnit.SECONDS);
         if (!messageSent) {
-            throw new RuntimeException("Timeout waiting for message to be sent");
+            throw new RuntimeException("❌ Timeout waiting for message to be sent");
         }
     }
 }

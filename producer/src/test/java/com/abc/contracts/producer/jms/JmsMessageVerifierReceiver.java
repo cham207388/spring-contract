@@ -25,30 +25,15 @@ public class JmsMessageVerifierReceiver implements MessageVerifierReceiver<Messa
     public Message receive(String destination, long timeout, TimeUnit timeUnit, @Nullable YamlContract contract) {
         System.out.format("Receiving message from %s with timeout %s %s%n", destination, timeout, timeUnit);
         jmsTemplate.setReceiveTimeout(timeUnit.toMillis(timeout));
-
-        Message message = null;
-        int maxRetries = 5;  // ✅ Increase this if necessary
-        int retryDelay = 1000; // 1 second between retries
-
-        for (int attempt = 1; attempt <= maxRetries; attempt++) {
-            message = jmsTemplate.receive(destination);
-            if (message != null) {
-                System.out.printf("✅ [Attempt %d/%d] Received message from '%s'%n", attempt, maxRetries, destination);
-                System.out.println("Received message payload: " + extractPayload(message));
-                System.out.println("Received message headers: " + extractHeaders(message));
-                return message;
-            } else {
-                System.out.printf("⏳ [Attempt %d/%d] No message yet. Retrying in %dms...%n", attempt, maxRetries, retryDelay);
-                try {
-                    Thread.sleep(retryDelay);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
+        Message message = jmsTemplate.receive(destination);
+        if (message != null) {
+            System.out.println("Received message payload: " + extractPayload(message));
+            System.out.println("Received message headers: " + extractHeaders(message));
+        } else {
+            System.out.println("No message received from destination: " + destination);
         }
+        return message;
 
-        System.out.println("❌ No message received from destination: " + destination + " after " + maxRetries + " attempts.");
-        return null;
     }
 
     @Override

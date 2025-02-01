@@ -28,14 +28,17 @@ public class JmsMessageVerifierSender implements MessageVerifierSender<Message> 
 
     @Override
     public <T> void send(T payload, Map<String, Object> headers, String destination, YamlContract contract) {
-        System.out.println("Sending message to '" + destination + "' with payload: " + payload);
-        System.out.println("Headers: " + headers);
+        System.out.println("🚀 SCC sending message to '" + destination + "'");
+        System.out.println("📩 Payload: " + payload);
+        System.out.println("🛠 Headers: " + headers);
 
         jmsTemplate.send(destination, session -> {
             TextMessage textMessage = session.createTextMessage(payload instanceof String ? (String) payload : convertToJson(payload));
             headers.forEach((key, value) -> setHeaderSafely(textMessage, key, value));
             return textMessage;
         });
+
+        System.out.println("✅ Message sent via SCC to '" + destination + "'");
     }
 
     private String convertToJson(Object object) {

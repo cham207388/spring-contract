@@ -67,6 +67,7 @@ public class JmsTestConfig {
     public ContractVerifierMessaging<?> contractVerifierMessaging(
             JmsMessageVerifierSender sender,
             JmsMessageVerifierReceiver receiver) {
+        System.out.println("✅ Initializing ContractVerifierMessaging with sender and receiver");
         return new ContractVerifierMessaging<>(sender, receiver);
     }
 
