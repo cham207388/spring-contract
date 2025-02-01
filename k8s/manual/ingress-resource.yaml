@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: contract-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2  # Rewrite the path correctly
+    nginx.ingress.kubernetes.io/rewrite-target: /$2 # Rewrite the path correctly
 spec:
   ingressClassName: nginx
   rules:
@@ -24,3 +24,17 @@ spec:
             name: consumer
             port:
               number: 8085
+      - path: /activemq(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: activemq
+            port:
+              number: 8161
+      - path: /zipkin(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: zipkin
+            port:
+              number: 9411
