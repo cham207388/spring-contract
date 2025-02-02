@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 @TestConfiguration
 public class EmbeddedArtemisTestConfig {
 
-    private static EmbeddedActiveMQ broker = new EmbeddedActiveMQ();
+    private static final EmbeddedActiveMQ broker = new EmbeddedActiveMQ();
     private static volatile boolean isStarted = false;
 
     @Bean(initMethod = "start", destroyMethod = "stop")

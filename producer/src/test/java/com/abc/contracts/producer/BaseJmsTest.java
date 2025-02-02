@@ -54,7 +54,7 @@ public abstract class BaseJmsTest {
         }
     }
 
-    protected void triggerPostMessage() throws InterruptedException {
+    protected void triggerPostMessage()  {
         String payload = "{\"id\":1,\"title\":\"string\",\"content\":\"string\",\"userId\":1,\"createdAt\":\"2025-01-28T21:58:21\"}";
         jmsTemplate.convertAndSend("post-queue", payload, message -> {
             message.setStringProperty("_type", "com.abc.contracts.producer.domains.Post");
