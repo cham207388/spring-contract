@@ -8,8 +8,6 @@ import org.springframework.cloud.contract.stubrunner.StubFinder;
 import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
 import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.PollableChannel;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,10 +43,10 @@ class MessageIntegrationTest {
                 "quantity": 1
             }
         """;
-        jmsTemplate.convertAndSend("order.queue", message);
+        jmsTemplate.convertAndSend(queue, message);
 
         // ✅ Receive the message from ActiveMQ
-        String receivedMessage = (String) jmsTemplate.receiveAndConvert("order.queue");
+        String receivedMessage = (String) jmsTemplate.receiveAndConvert(queue);
         System.out.println(receivedMessage);
 
         // ✅ Assertions
