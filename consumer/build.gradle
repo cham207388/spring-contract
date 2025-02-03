@@ -22,6 +22,8 @@ configurations {
 repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/release' }
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
 }
 
 ext {
@@ -30,23 +32,40 @@ ext {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
     compileOnly 'org.projectlombok:lombok:1.18.30'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // ✅ Spring Cloud Contract Stub Runner for messaging tests
     testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // ✅ Required for testing Spring Cloud Stream-based messaging
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+
+    // ✅ Optional: H2 for embedded testing (if your consumer reads from DB)
     testImplementation 'com.h2database:h2'
-    runtimeOnly 'org.postgresql:postgresql'
 
-    // add tracing
+    // ✅ Distributed tracing for observability
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
     implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.2'
     implementation 'io.opentelemetry:opentelemetry-exporter-zipkin:1.46.0'
 
+    // ✅ API Documentation (optional)
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+    implementation 'org.springframework.boot:spring-boot-starter-artemis' // For JMS with Artem
+
+    implementation 'org.springframework.boot:spring-boot-starter-activemq'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Add ActiveMQ test dependency
+    testImplementation 'org.apache.activemq:activemq-broker'
 }
 
 dependencyManagement {
