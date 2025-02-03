@@ -98,7 +98,16 @@ This is the service that is calling the producer. It's also called the client.
 - how to use prioritise in WireMock
   - [priority explain](https://stackoverflow.com/questions/50078978/how-to-use-priorities-in-wiremock)
 
-## Dockerized the application
+## Containers and Orchestration
+
+- Create dockerfile for producer and consumer
+- docker compose for local development
+- Kubernetes for orchestration
+  - manual folder
+    - deployment/service/volumes for each layer
+    - [script](k8s/manual/deploy.sh) to create K8s objects including an ingress
+  - helm
+    - working on this
 
 ### Services
 
