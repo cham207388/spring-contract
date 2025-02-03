@@ -38,19 +38,21 @@ class MessageIntegrationTest {
         // ✅ Send a test message manually
         String message = """
             {
-                "orderId": "123ABC7890",
-                "product": "Laptop",
-                "quantity": 1
+                "id": "123ABC7890",
+                "title": "Laptop",
+                "content": "Technology Shift",
+                "userId": 1,
+                "createdAt": "2022-01-28T21:58:21"
             }
         """;
         jmsTemplate.convertAndSend(queue, message);
 
         // ✅ Receive the message from ActiveMQ
         String receivedMessage = (String) jmsTemplate.receiveAndConvert(queue);
-        System.out.println(receivedMessage);
+        System.out.println("=== Message from Queue ===\n"+receivedMessage);
 
         // ✅ Assertions
-        assertThat(receivedMessage).isNotNull().contains("orderId", "product", "quantity");
+        assertThat(receivedMessage).isNotNull().contains("id", "title", "content", "userId", "createdAt");
 
         System.out.println("✅ Received message: " + receivedMessage);
     }
