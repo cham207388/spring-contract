@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.abc.contracts'
-version = '0.0.1-SNAPSHOT' // Keep SNAPSHOT version for build/libs artifact
+version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
@@ -15,31 +15,25 @@ java {
     }
 }
 
-// def gitCommitHash = 'git rev-parse --short HEAD'.execute().text.trim()
 def stubVersion = '0.0.1-RELEASE'
 
 publishing {
     publications {
         stubs(MavenPublication) {
             artifactId = "${project.name}"
-
-            // Override version for publishing (remove SNAPSHOT)
             version = "${stubVersion}"
-
-            // Use the renamed artifact for publishing
             artifact(layout.buildDirectory.file("libs/${project.name}-${stubVersion}-stubs.jar")) {
                 classifier = 'stubs'
             }
         }
     }
     repositories {
-        mavenLocal() // Publish to the local Maven repository (~/.m2/repository)
+        mavenLocal()
     }
 }
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/release' }
 }
 
 ext {
@@ -47,31 +41,33 @@ ext {
 }
 
 dependencies {
+    def artemisVersion = '2.31.0'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-activemq'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2' // Replace version with the one you need
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'org.springframework.boot:spring-boot-starter-json'
-
-    // add tracing
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.2'
     implementation 'io.opentelemetry:opentelemetry-exporter-zipkin:1.46.0'
 
-    // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-
-    // serializer
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
+
+    // Spring Cloud Stream Test Binder (for in-memory messaging)
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+    implementation 'org.springframework.cloud:spring-cloud-stream'
 
 }
 
@@ -82,7 +78,13 @@ dependencyManagement {
 }
 
 contracts {
-    baseClassForTests = 'com.abc.contracts.producer.BaseContractTest'
+    testFramework = 'JUnit5'
+    packageWithBaseClasses = 'com.abc.contracts.producer'
+
+    baseClassMappings {
+        baseClassMapping('.*http.*', 'com.abc.contracts.producer.BaseHttpTest')
+        baseClassMapping('.*message.*', 'com.abc.contracts.producer.BaseMessageTest')
+    }
 }
 
 tasks.named('contractTest') {
@@ -93,26 +95,22 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-// Task to rename the artifact
 tasks.register('renameStubArtifact') {
-    // Access the input and output files using layout.buildDirectory
     def sourcePath = layout.buildDirectory.file("libs/${project.name}-${version}-stubs.jar")
     def targetPath = layout.buildDirectory.file("libs/${project.name}-${stubVersion}-stubs.jar")
 
-    inputs.file(sourcePath) // Original artifact
-    outputs.file(targetPath) // Renamed artifact
+    inputs.file(sourcePath)
+    outputs.file(targetPath)
 
     doLast {
         def sourceFile = sourcePath.get().asFile
         def targetFile = targetPath.get().asFile
         def targetDir = targetFile.parentFile
 
-        // Ensure the target directory exists
         if (!targetDir.exists()) {
             targetDir.mkdirs()
         }
 
-        // Rename the file
         if (sourceFile.renameTo(targetFile)) {
             println "Renamed artifact created: ${targetFile}"
         } else {
@@ -121,5 +119,4 @@ tasks.register('renameStubArtifact') {
     }
 }
 
-// publish task depends on rename task
 publishStubsPublicationToMavenLocalRepository.dependsOn renameStubArtifact

@@ -1,6 +1,6 @@
 package com.abc.contracts.producer;
 
-import com.abc.contracts.producer.config.TestConfig;
+import com.abc.contracts.producer.config.HttpTestConfig;
 import com.abc.contracts.producer.controllers.PostController;
 import com.abc.contracts.producer.domains.Post;
 import com.abc.contracts.producer.services.PostService;
@@ -19,18 +19,18 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ContextConfiguration(classes = TestConfig.class)
-public abstract class BaseContractTest {
+@ContextConfiguration(classes = HttpTestConfig.class)
+public abstract class BaseHttpTest {
 
     private final PostController postController;
     private final PostService postService;
 
-    public BaseContractTest(PostController postController, PostService postService) {
+    public BaseHttpTest(PostController postController, PostService postService) {
         this.postController = postController;
         this.postService = postService;
     }
 
-    public BaseContractTest() {
+    public BaseHttpTest() {
         this.postService = Mockito.mock(PostService.class); // Mock PostService
         this.postController = new PostController(postService); // Use mocked PostService
     }

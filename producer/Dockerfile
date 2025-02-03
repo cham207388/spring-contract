@@ -15,10 +15,17 @@ RUN ./gradlew dependencies --no-daemon
 COPY src /app/src
 
 # Build the Spring Boot application
-RUN ./gradlew build -x test --no-daemon
+RUN ./gradlew build --no-daemon -x test -x contractTest -x generateContractTests -x generateClientStubs
 
 # Second stage: runtime image
 FROM eclipse-temurin:21-jre-alpine
+
+RUN addgroup -S -g 1000 producer && \
+    adduser -S -u 1000 -G producer producer && \
+    mkdir -p /app && \
+    chown producer:producer /app
+
+USER producer
 
 # Set working directory
 WORKDIR /app

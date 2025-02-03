@@ -36,4 +36,12 @@ public class Post {
         this.content = content;
         this.userId = userId;
     }
+
+//    public Post(int id, String title, String content, Integer userId, LocalDateTime createdAt) {
+//        this.id = id;
+//        this.title = title;
+//        this.content = content;
+//        this.userId = userId;
+//        this.createdAt = createdAt;
+//    }
 }
