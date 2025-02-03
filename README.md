@@ -21,7 +21,7 @@ This is the service being queried by the consumer either by using WebClient or R
   - /http/ for http client contracts
     - [example http contract](producer/src/contractTest/resources/contracts/http/when_one_post_is_saved.groovy) 
   - /jms/ for jms message contracts
-    - [example jms contract](producer/src/contractTest/resources/contracts/jms/when_one_post_is_published_to_amq.groovy)
+    - [example jms contract](producer/src/contractTest/resources/contracts/message/when_one_post_is_published_to_amq.groovy)
   - `./gradlew build` is responsible for generating the stubs and running the tests: will likely fail here
   - a `build/generated-test-sources/contractTest/ContractVerifierTest` class will be created from the contracts.
 - create a `Base Test` file
@@ -35,7 +35,7 @@ This is the service being queried by the consumer either by using WebClient or R
 
            baseClassMappings {
                baseClassMapping('.*http.*', 'com.abc.contracts.producer.BaseHttpTest') // HTTP tests
-               baseClassMapping('.*jms.*', 'com.abc.contracts.producer.BaseJmsTest')   // JMS tests
+               baseClassMapping('.*jms.*', 'com.abc.contracts.producer.BaseMessageTest')   // JMS tests
            }
         }
   ```

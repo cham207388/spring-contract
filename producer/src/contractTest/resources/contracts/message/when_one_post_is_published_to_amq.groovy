@@ -1,4 +1,4 @@
-package contracts.jms
+package contracts.message
 
 import org.springframework.cloud.contract.spec.Contract
 
@@ -8,11 +8,11 @@ Contract.make {
     priority 1
 
     input {
-        triggeredBy("triggerPostMessage()") // Explicitly call from BaseJmsTest
+        triggeredBy("triggerPostMessage()") // Explicitly call from BaseMessageTest
     }
 
     outputMessage {
-        sentTo("post-queue")
+        sentTo("post.queue")
 
         body(
                 id: $(regex('-?\\d+')),
@@ -21,11 +21,5 @@ Contract.make {
                 userId: $(regex('\\d+')),
                 createdAt: $(regex("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}"))
         )
-
-        headers {
-            header("_type", "com.abc.contracts.producer.domains.Post")
-            header("JMSType", "application/json")
-            header("Content_Type", "application/json")
-        }
     }
 }

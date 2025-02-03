@@ -44,13 +44,14 @@ dependencies {
     def artemisVersion = '2.31.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-activemq'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
 
@@ -64,14 +65,10 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
 
-    implementation 'org.springframework.boot:spring-boot-starter-artemis'
-    testImplementation 'org.apache.activemq:artemis-junit-5:2.32.0'
+    // Spring Cloud Stream Test Binder (for in-memory messaging)
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+    implementation 'org.springframework.cloud:spring-cloud-stream'
 
-    testImplementation "org.apache.activemq:artemis-jms-server:${artemisVersion}"
-    testImplementation "org.apache.activemq:artemis-jakarta-client:${artemisVersion}"
-
-    testImplementation "org.testcontainers:testcontainers:1.19.0"
-    testImplementation "org.testcontainers:junit-jupiter:1.19.0"
 }
 
 dependencyManagement {
@@ -86,7 +83,7 @@ contracts {
 
     baseClassMappings {
         baseClassMapping('.*http.*', 'com.abc.contracts.producer.BaseHttpTest')
-        baseClassMapping('.*jms.*', 'com.abc.contracts.producer.BaseJmsTest')
+        baseClassMapping('.*message.*', 'com.abc.contracts.producer.BaseMessageTest')
     }
 }
 
