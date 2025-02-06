@@ -31,7 +31,7 @@ envsubst < ingress-resource.yaml | kubectl create -f - --namespace default
 
 tput setaf 7
 echo -e "\n \n*******************************************************************************************************************"
-echo -e "Ingress URL Rule: contract.$hostip.nip.io \n"
+echo -e "Ingress URL host: $(kubectl get ingress -o jsonpath="{.items[*].spec.rules[*].host}")"
 echo -e "\n You can now browse to the NGINX pod using the nip.io domain from any machine on your local network"
 echo -e "******************************************************************************************************************* \n\n"
 tput setaf 2
