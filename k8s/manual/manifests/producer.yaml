@@ -19,7 +19,7 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-      - image: baicham/spring-contract-producer:swagger-config1.2
+      - image: baicham/spring-contract-producer:bake1.0
         name: spring-contract-producer
         resources:
           requests:
