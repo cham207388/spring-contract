@@ -34,8 +34,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-activemq'
-    runtimeOnly 'org.postgresql:postgresql'
 
+    // ✅ Distributed tracing for observability
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.2'
+    implementation 'io.opentelemetry:opentelemetry-exporter-zipkin:1.46.0'
+
+    // ✅ API Documentation (optional)
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-artemis' // For JMS with Artem
+
+    runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
@@ -49,15 +58,6 @@ dependencies {
 
     // ✅ Optional: H2 for embedded testing (if your consumer reads from DB)
     testImplementation 'com.h2database:h2'
-
-    // ✅ Distributed tracing for observability
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'io.micrometer:micrometer-tracing-bridge-otel:1.4.2'
-    implementation 'io.opentelemetry:opentelemetry-exporter-zipkin:1.46.0'
-
-    // ✅ API Documentation (optional)
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-    implementation 'org.springframework.boot:spring-boot-starter-artemis' // For JMS with Artem
 
     // Add ActiveMQ test dependency
     testImplementation 'org.apache.activemq:activemq-broker'
