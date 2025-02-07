@@ -19,12 +19,12 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
-      - image: baicham/spring-contract-producer:bake1.0
+      - image: baicham/spring-contract-producer:docker-bake1.0
         name: spring-contract-producer
         resources:
           requests:
             cpu: "100m"
-            memory: "128Mi"
+            memory: "256Mi"
           limits:
             cpu: "200m"
             memory: "512Mi"
