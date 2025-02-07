@@ -1,4 +1,5 @@
-.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer dc-network producer-image build-images push-images consumer-image dcu dcd deployment
+.PHONY: help cleanp buildp publish testp cbp cbc cleanc buildc debugc testp database zipkin stop-db producer consumer \
+		dc-network producer-image build-images push-images consumer-image dcu dcd deployment dc-bake
 
 version ?= latest
 
@@ -120,3 +121,7 @@ dc-producer: producer-image push-producer
 
 dc-consumer: consumer-image push-consumer
 	echo 'build and push consumer image to docker hub'
+
+dc-bake:
+	@echo "Using image tag: $(VERSION)"
+	@export IMAGE_TAG=$(version) && docker buildx bake --push
