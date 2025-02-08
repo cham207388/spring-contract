@@ -123,5 +123,5 @@ dc-consumer: consumer-image push-consumer
 	echo 'build and push consumer image to docker hub'
 
 dc-bake:
-	@echo "Using image tag: $(VERSION)"
+	@echo "Using image tag: $(version)"
 	@export IMAGE_TAG=$(version) && docker buildx bake --push
