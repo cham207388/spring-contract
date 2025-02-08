@@ -117,6 +117,13 @@ This is the service that is calling the producer. It's also called the client.
 - zipkin
 - activemq
 
+### Docker bake
+
+- create docker-bake.hcl
+- export variable=value
+- execute `docker buildx bake --load` to build and see them locally
+- execute `docker buildx bake --push` to build and push to docker hub
+
 ## Makefile
 
 - with dynamic values:
